@@ -80,5 +80,10 @@ namespace Aqueduct.Toggles
                 .Cast<FeatureToggleConfigurationElement>()
                 .FirstOrDefault(x => x.Layout != null && (x.Layout.ItemId == itemId || x.Layout.TemplateId == templateId));
         }
+
+        public static List<FeatureToggleConfigurationElement> GetAllFeatures()
+        {
+            return FeatureToggleConfiguration.Features.Cast<FeatureToggleConfigurationElement>().ToList();
+        }
     }
 }

@@ -4,7 +4,7 @@ using Aqueduct.Toggles.Configuration.Sublayouts;
 
 namespace Aqueduct.Toggles.Configuration
 {
-    internal class FeatureToggleConfigurationElement : ConfigurationElement
+    public class FeatureToggleConfigurationElement : ConfigurationElement
     {
         [ConfigurationProperty("name", IsRequired = true, IsKey = true)]
         internal string Name

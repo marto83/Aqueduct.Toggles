@@ -57,5 +57,13 @@ namespace Aqueduct.Toggles.Tests
             Assert.AreEqual(new Guid("{BBDBC750-D502-4B1B-A5B4-77A4AB947DE8}"), sublayouts[0].SublayoutId);
             Assert.AreEqual(new Guid("{039BF107-3806-464E-B137-CF46A139D1F8}"), sublayouts[1].SublayoutId);
         }
+
+        [Test]
+        public void GetAllFeatures_GivenFeaturesInConfig_ReturnsSixFeatureToggles()
+        {
+            var features = FeatureToggles.GetAllFeatures();
+
+            Assert.AreEqual(6, features.Count);
+        }
     }
 }
