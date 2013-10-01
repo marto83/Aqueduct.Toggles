@@ -7,13 +7,13 @@ namespace Aqueduct.Toggles.Configuration
     public class FeatureToggleConfigurationElement : ConfigurationElement
     {
         [ConfigurationProperty("name", IsRequired = true, IsKey = true)]
-        internal string Name
+        public string Name
         {
             get { return (string)this["name"]; }
         }
 
         [ConfigurationProperty("enabled", IsRequired = true)]
-        internal bool Enabled
+        public bool Enabled
         {
             get { return (bool)this["enabled"]; }
         }

@@ -32,24 +32,28 @@
       <p>Listed below is the list of feature toggles currently configured for this site.</p>
       
       <asp:Repeater ID="FeatureToggleRepeater" runat="server">
-          <ItemTemplate>
-              <table>
+        <HeaderTemplate>
+          <table>
                   <thead>
-                      <th>
-                          <td><b>Name</b></td>
-                          <td><b>Enabled?</b></td>
-                      </th>
+                      <tr>
+                          <th align="left"><b>Name</b></th>
+                          <th align="left"><b>Enabled?</b></th>
+                      </tr>
                   </thead>
-                  <tr>
-                      <td>
-                          <%#Eval("Name")%>
-                      </td>
-                      <td>
-                          <%#Eval("Enabled")%>
-                      </td>
-                  </tr>
-              </table>
-          </ItemTemplate>
+        </HeaderTemplate>
+        <ItemTemplate>
+                <tr>
+                    <td align="left">
+                        <%#Eval("Name")%>
+                    </td>
+                    <td align="left">
+                        <%#Eval("Enabled")%>
+                    </td>
+                </tr>
+        </ItemTemplate>
+        <FooterTemplate>
+            </table>
+        </FooterTemplate>
       </asp:Repeater>
 
       </asp:Placeholder>
