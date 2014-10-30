@@ -16,12 +16,16 @@ namespace Aqueduct.Toggles.Sitecore
 
             var itemId = item.ID.Guid;
             var templateId = item.Template.ID.Guid;
-            if (FeatureToggles.ShouldReplaceLayout(itemId, templateId))
+            var currentLanguage = Context.Language.Name;
+            if (FeatureToggles.ShouldReplaceLayout(itemId, templateId, currentLanguage))
             {
-                var replacement = FeatureToggles.GetLayoutReplacement(itemId, templateId);
+                var replacement = FeatureToggles.GetLayoutReplacement(itemId, templateId, currentLanguage);
 
-                LayoutItem pageEditLayout = Context.Database.GetItem(new ID(replacement.LayoutId));
-                Context.Page.FilePath = pageEditLayout.FilePath;
+                if (replacement.LayoutId.HasValue)
+                {
+                    LayoutItem pageEditLayout = Context.Database.GetItem(new ID(replacement.LayoutId.Value));
+                    Context.Page.FilePath = pageEditLayout.FilePath;
+                }
             }
         }
     }

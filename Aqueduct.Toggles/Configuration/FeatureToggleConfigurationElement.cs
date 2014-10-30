@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 using Aqueduct.Toggles.Configuration.Layouts;
-using Aqueduct.Toggles.Configuration.Sublayouts;
+using Aqueduct.Toggles.Configuration.Renderings;
 
 namespace Aqueduct.Toggles.Configuration
 {
@@ -18,17 +18,31 @@ namespace Aqueduct.Toggles.Configuration
             get { return (bool)this["enabled"]; }
         }
 
-        [ConfigurationProperty("sublayouts", IsDefaultCollection = true)]
-        [ConfigurationCollection(typeof(FeatureSublayoutsConfigurationCollection), AddItemName = "sublayout")]
-        internal FeatureSublayoutsConfigurationCollection Sublayouts
+        [ConfigurationProperty("languages")]
+        internal string Languages
         {
-            get { return base["sublayouts"] as FeatureSublayoutsConfigurationCollection; }
+            get { return (string)this["languages"]; }
         }
 
-        [ConfigurationProperty("layout")]
-        internal FeatureToggleLayoutConfigurationElement Layout
+        [ConfigurationProperty("renderings", IsDefaultCollection = true)]
+        [ConfigurationCollection(typeof(FeatureRenderingConfigurationCollection), AddItemName = "rendering")]
+        internal FeatureRenderingConfigurationCollection Renderings
         {
-            get { return base["layout"] as FeatureToggleLayoutConfigurationElement; }
+            get { return base["renderings"] as FeatureRenderingConfigurationCollection; }
+        }
+
+        [ConfigurationProperty("items", IsDefaultCollection = true)]
+        [ConfigurationCollection(typeof(BaseFeatureToggleLayoutConfigurationCollection), AddItemName = "item")]
+        internal BaseFeatureToggleLayoutConfigurationCollection Items
+        {
+            get { return base["items"] as BaseFeatureToggleLayoutConfigurationCollection; }
+        }
+
+        [ConfigurationProperty("templates", IsDefaultCollection = true)]
+        [ConfigurationCollection(typeof(BaseFeatureToggleLayoutConfigurationCollection), AddItemName = "template")]
+        internal BaseFeatureToggleLayoutConfigurationCollection Templates
+        {
+            get { return base["templates"] as BaseFeatureToggleLayoutConfigurationCollection; }
         }
     }
 }

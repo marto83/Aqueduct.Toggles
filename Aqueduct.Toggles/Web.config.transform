@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <configSections>
+    <section name="featureToggles" type="Aqueduct.Toggles.Configuration.FeatureToggleConfigurationSection, Aqueduct.Toggles" />
+  </configSections>
+  <system.web>
+    <pages>
+      <controls>
+        <add tagPrefix="aque" namespace="Aqueduct.Toggles" assembly="Aqueduct.Toggles" />
+      </controls>
+    </pages>
+  </system.web>
+  <featureToggles configSource="App_Config\FeatureToggles.config" />
+</configuration>

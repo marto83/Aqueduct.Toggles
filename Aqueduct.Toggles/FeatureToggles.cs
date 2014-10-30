@@ -4,39 +4,52 @@ using System.Configuration;
 using System.Linq;
 using Aqueduct.Toggles.Configuration;
 using Aqueduct.Toggles.Configuration.Layouts;
-using Aqueduct.Toggles.Configuration.Sublayouts;
+using Aqueduct.Toggles.Configuration.Renderings;
 
 namespace Aqueduct.Toggles
 {
     public static class FeatureToggles
     {
         private static readonly FeatureToggleConfigurationSection FeatureToggleConfiguration = ConfigurationManager.GetSection("featureToggles") as FeatureToggleConfigurationSection;
+        internal static readonly FeatureConfiguration Configuration = new FeatureConfiguration();
 
         static FeatureToggles()
         {
             if (FeatureToggleConfiguration == null) throw new ConfigurationErrorsException("Missing featureToggles section in config.");
+
+            Configuration.LoadFromConfiguration(FeatureToggleConfiguration);
         }
 
         public static bool IsEnabled(string name)
         {
-            var feature = FeatureToggleConfiguration.Features[name];
-
-            return feature != null && feature.Enabled;
+            return Configuration.IsEnabled(name);
         }
 
-        public static IEnumerable<SublayoutReplacement> GetAllSublayoutReplacements()
+        public static string GetCssClassesForFeatures(string currentLanguage)
         {
-            var allFeatures = FeatureToggleConfiguration.Features.Cast<FeatureToggleConfigurationElement>().Where(x => x.Enabled);
+            var enabled = Configuration.AllFeatures.Where(x => x.Enabled && x.EnabledForLanguage(currentLanguage))
+                                                    .Select(x => string.Concat("feat-", x.Name))
+                                                    .ToArray();
+            return string.Join(" ", enabled);
+        }
 
-            var allSublayouts = new List<SublayoutReplacement>();
+        public static IList<FeatureToggle> GetAllFeatures()
+        {
+            return Configuration.AllFeatures.ToList();
+        }
+      
+        internal static IEnumerable<RenderingReplacement> GetAllRenderingReplacements(string currentLanguage)
+        {
+            var allFeatures = Configuration.EnabledFeatures.Where(x => x.EnabledForLanguage(currentLanguage));
+
+            var allSublayouts = new List<RenderingReplacement>();
             foreach (var feature in allFeatures)
             {
-                var feature1 = feature;
+                var currentFeature = feature;
                 var sublayouts =
-                    feature.Sublayouts.Cast<FeatureSublayoutsConfigurationElement>()
-                           .Select(x => new SublayoutReplacement
+                    feature.Renderings.Select(x => new RenderingReplacement
                                             {
-                                                Enabled = feature1.Enabled,
+                                                Enabled = currentFeature.Enabled,
                                                 New = x.New,
                                                 Original = x.Original
                                             });
@@ -47,43 +60,45 @@ namespace Aqueduct.Toggles
             return allSublayouts;
         }
 
-        public static bool ShouldReplaceLayout(Guid itemId, Guid templateId)
+        internal static bool ShouldReplaceLayout(Guid itemId, Guid templateId, string currentLanguage)
         {
-            var replacement = GetLayoutReplacementElement(itemId, templateId);
+            var replacement = GetLayoutReplacementElement(itemId, templateId, currentLanguage);
 
             return replacement != null;
         }
 
-        public static LayoutReplacement GetLayoutReplacement(Guid itemId, Guid templateId)
+        internal static LayoutReplacement GetLayoutReplacement(Guid itemId, Guid templateId, string currentLanguage)
         {
-            var replacement = GetLayoutReplacementElement(itemId, templateId);
+            var replacement = GetLayoutReplacementElement(itemId, templateId, currentLanguage);
             if (replacement == null) throw new ArgumentException(string.Format("Cannot find replacement layout for item ID: {0}, template ID: {1}", itemId, templateId));
 
             return new LayoutReplacement
                        {
-                           LayoutId = replacement.Layout.New,
-                           Sublayouts = replacement.Layout.Sublayouts
-                                                   .Cast<FeatureToggleLayoutSublayoutsConfigurationElement>()
+                           LayoutId = replacement.New,
+                           Sublayouts = replacement.Renderings
                                                    .Select(x => new LayoutReplacement.SublayoutReplacement
                                                                     {
                                                                         SublayoutId = x.SublayoutId,
-                                                                        Placeholder = x.Placeholder
+                                                                        Placeholder = x.PlaceHolder
                                                                     })
                                                    .ToList()
                        };
         }
 
-        private static FeatureToggleConfigurationElement GetLayoutReplacementElement(Guid itemId, Guid templateId)
+        private static LayoutToggle GetLayoutReplacementElement(Guid itemId, Guid templateId, string currentLanguage)
         {
-            return FeatureToggleConfiguration
-                .Features
-                .Cast<FeatureToggleConfigurationElement>()
-                .FirstOrDefault(x => x.Layout != null && (x.Layout.ItemId == itemId || x.Layout.TemplateId == templateId));
+            return GetElement(itemId, currentLanguage, x => x.Items) ??
+                   GetElement(templateId, currentLanguage, x => x.Templates);
         }
 
-        public static List<FeatureToggleConfigurationElement> GetAllFeatures()
+        private static LayoutToggle GetElement(Guid itemId, string currentLanguage, Func<FeatureToggle, IList<LayoutToggle>> expression)
         {
-            return FeatureToggleConfiguration.Features.Cast<FeatureToggleConfigurationElement>().ToList();
+            return Configuration
+                .EnabledFeatures
+                .Where(x => x.EnabledForLanguage(currentLanguage))
+                .SelectMany(expression.Invoke)
+                .Where(x => x != null)
+                .FirstOrDefault(x => x.Id == itemId);
         }
     }
 }

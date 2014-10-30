@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Aqueduct.Toggles</id>
+    <version>2.0.0.0</version>
+    <title />
+    <authors>Neil Duncan</authors>
+    <owners />
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Feature toggling for use with Sitecore</description>
+    <summary />
+  </metadata>
+  <files>
+    <file src="..\..\Aqueduct.Toggles.dll" target="lib\net40\Aqueduct.Toggles.dll" />
+    <file src="..\..\App_Config\Include\Aqueduct.Toggles.config" target="content\App_Config\Include\Aqueduct.Toggles.config" />
+    <file src="..\..\App_Config\FeatureToggles.config" target="content\App_Config\FeatureToggles.config" />
+    <file src="..\..\Web.config.transform" target="content\Web.config.transform" />
+    <file src="..\..\__Admin\FeatureToggles.aspx" target="content\__Admin\FeatureToggles.aspx" />
+  </files>
+</package>

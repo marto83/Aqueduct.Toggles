@@ -2,7 +2,7 @@
 
 namespace Aqueduct.Toggles.Configuration
 {
-    public class FeatureToggleConfigurationCollection : ConfigurationElementCollection
+    internal class FeatureToggleConfigurationCollection : ConfigurationElementCollection
     {
         internal new FeatureToggleConfigurationElement this[string name]
         {

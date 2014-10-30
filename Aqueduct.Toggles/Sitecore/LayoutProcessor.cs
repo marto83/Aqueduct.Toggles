@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using Sitecore;
+using System.Linq;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
@@ -21,11 +21,12 @@ namespace Aqueduct.Toggles.Sitecore
             var templateId = item.Template.ID.Guid;
 
             var page = Context.Page;
-            if (FeatureToggles.ShouldReplaceLayout(itemId, templateId))
+            var currentLanguage = Context.Language.Name;
+            if (FeatureToggles.ShouldReplaceLayout(itemId, templateId, currentLanguage))
             {
                 page.ClearRenderings();
 
-                var renderings = FeatureToggles.GetLayoutReplacement(itemId, templateId);
+                var renderings = FeatureToggles.GetLayoutReplacement(itemId, templateId, currentLanguage);
                 foreach (var sublayout in renderings.Sublayouts)
                 {
                     var rendering = GetRenderingByItemId(sublayout.SublayoutId, sublayout.Placeholder);
@@ -37,7 +38,7 @@ namespace Aqueduct.Toggles.Sitecore
             {
                 var originalRenderings = page.Renderings.ToList();
 
-                var sublayoutReplacements = FeatureToggles.GetAllSublayoutReplacements();
+                var sublayoutReplacements = FeatureToggles.GetAllRenderingReplacements(currentLanguage);
                 var foundReplacement = false;
                 foreach (var replacement in sublayoutReplacements)
                 {
@@ -66,11 +67,20 @@ namespace Aqueduct.Toggles.Sitecore
 
         private RenderingReference GetRenderingByItemId(Guid itemId, string placeholder)
         {
-            var renderingItem = Context.Database.GetItem(new ID(itemId));
+            var renderingItem = (RenderingItem)Context.Database.GetItem(new ID(itemId));
+
             if (renderingItem == null) return null;
 
-            var rendering = new RenderingItem(renderingItem);
-            var renderingReference = new RenderingReference(rendering) { Placeholder = placeholder };
+            var renderingReference = new RenderingReference(renderingItem);
+            renderingReference.Settings.Caching = renderingItem.Caching;
+            renderingReference.Settings.Conditions = renderingItem.Conditions;
+            renderingReference.Settings.DataSource = renderingItem.DataSource;
+            renderingReference.Settings.MultiVariateTest = renderingItem.MultiVariateTest;
+            renderingReference.Settings.Parameters = renderingItem.Parameters;
+            renderingReference.Settings.Placeholder = renderingItem.Placeholder;
+
+            if (!string.IsNullOrWhiteSpace(placeholder))
+                renderingReference.Placeholder = placeholder;
 
             return renderingReference;
         }

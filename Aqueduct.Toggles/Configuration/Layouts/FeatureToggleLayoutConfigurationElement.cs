@@ -3,31 +3,25 @@ using System.Configuration;
 
 namespace Aqueduct.Toggles.Configuration.Layouts
 {
-    internal class FeatureToggleLayoutConfigurationElement : ConfigurationElement
+    internal class BaseFeatureToggleLayoutConfigurationElement : ConfigurationElement
     {
-        [ConfigurationProperty("item")]
-        internal Guid ItemId
+        [ConfigurationProperty("id", IsKey = true, IsRequired = true)]
+        internal Guid Id
         {
-            get { return (Guid)this["item"]; }
+            get { return (Guid)this["id"]; }
         }
 
-        [ConfigurationProperty("template")]
-        internal Guid TemplateId
+        [ConfigurationProperty("newLayoutId")]
+        internal Guid? New
         {
-            get { return (Guid)this["template"]; }
-        }
-
-        [ConfigurationProperty("new", IsRequired = true)]
-        internal Guid New
-        {
-            get { return (Guid)this["new"]; }
+            get { return (Guid?)this["newLayoutId"]; }
         }
 
         [ConfigurationProperty("", IsDefaultCollection = true)]
-        [ConfigurationCollection(typeof(FeatureToggleLayoutSublayoutsConfigurationCollection), AddItemName = "sublayout")]
-        internal FeatureToggleLayoutSublayoutsConfigurationCollection Sublayouts
+        [ConfigurationCollection(typeof(FeatureToggleLayoutRenderingsConfigurationCollection), AddItemName = "rendering")]
+        internal FeatureToggleLayoutRenderingsConfigurationCollection Renderings
         {
-            get { return base[""] as FeatureToggleLayoutSublayoutsConfigurationCollection; }
+            get { return base[""] as FeatureToggleLayoutRenderingsConfigurationCollection; }
         }
     }
 }
