@@ -63,11 +63,15 @@
     <Compile Include="Configuration\FeatureToggleConfigurationCollection.cs" />
     <Compile Include="Configuration\FeatureToggleConfigurationElement.cs" />
     <Compile Include="Configuration\Layouts\FeatureToggleLayoutConfigurationElement.cs" />
-    <Compile Include="FeatureToggle.cs" />
+    <Compile Include="FeatureConfiguration.cs" />
+    <Compile Include="Feature.cs" />
     <Compile Include="FeatureToggles.cs" />
     <Compile Include="LayoutReplacement.cs" />
+    <Compile Include="LayoutToggle.cs" />
+    <Compile Include="LayoutToggleRendering.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\FeatureToggleConfigurationSection.cs" />
+    <Compile Include="RenderingToggle.cs" />
     <Compile Include="Sitecore\LayoutResolver.cs" />
     <Compile Include="Sitecore\LayoutProcessor.cs" />
     <Compile Include="RenderingReplacement.cs" />

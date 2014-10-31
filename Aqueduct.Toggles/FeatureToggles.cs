@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using Aqueduct.Toggles.Configuration;
-using Aqueduct.Toggles.Configuration.Layouts;
-using Aqueduct.Toggles.Configuration.Renderings;
 
 namespace Aqueduct.Toggles
 {
@@ -40,7 +38,7 @@ namespace Aqueduct.Toggles
             return string.Join(" ", enabled);
         }
 
-        public static IList<FeatureToggle> GetAllFeatures()
+        public static IList<Feature> GetAllFeatures()
         {
             return Configuration.AllFeatures.ToList();
         }
@@ -98,7 +96,7 @@ namespace Aqueduct.Toggles
                    GetElement(templateId, currentLanguage, x => x.Templates);
         }
 
-        private static LayoutToggle GetElement(Guid itemId, string currentLanguage, Func<FeatureToggle, IList<LayoutToggle>> expression)
+        private static LayoutToggle GetElement(Guid itemId, string currentLanguage, Func<Feature, IList<LayoutToggle>> expression)
         {
             return Configuration
                 .EnabledFeatures
