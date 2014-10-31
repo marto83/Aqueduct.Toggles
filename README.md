@@ -63,3 +63,18 @@ Still in the pipelines section, find the renderLayout element and add the new Re
 </renderLayout>
 ```
 
+You can also override programatically. Let's say you want to enable a feature for one user and disable it for another.
+
+```cs
+
+protected void Application_Start()
+{
+	//... some initialisation code.
+	FeatureToggles.GetUserOverrides = () => {
+		Dictionary<string, bool> overrides = //Get overrides from a cookie or another source
+		
+		return overrides;
+	};
+}
+```
+
