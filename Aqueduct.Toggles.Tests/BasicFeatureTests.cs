@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using NUnit.Framework;
 
@@ -37,6 +38,20 @@ namespace Aqueduct.Toggles.Tests
             Assert.IsNotNull(feature);
             Assert.AreEqual("featureenabled", feature.Name);
             Assert.AreEqual(true, feature.Enabled);
+        }
+
+        [Test]
+        public void GetAllFeatures_GivenFeatureEnabledConfigButOverriddenByTheUser_ReturnsDisabledFeature()
+        {
+            FeatureToggles.GetUserOverrides = () => new Dictionary<string, bool>() { { "featureenabled", false } };
+            var enabled = FeatureToggles.IsEnabled("featureenabled");
+            Assert.False(enabled);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            FeatureToggles.GetUserOverrides = () => new Dictionary<string, bool>();
         }
     }
 }

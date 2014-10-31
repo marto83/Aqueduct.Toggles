@@ -8,7 +8,7 @@ using Aqueduct.Toggles.Configuration.Renderings;
 
 namespace Aqueduct.Toggles
 {
-    public class FeatureConfiguration
+    internal class FeatureConfiguration
     {
         private IList<FeatureToggle> _features = new List<FeatureToggle>();
 
@@ -24,20 +24,33 @@ namespace Aqueduct.Toggles
 
         public IEnumerable<FeatureToggle> EnabledFeatures
         {
-            get { return _features.Where(x => x.Enabled); }
+            get { return _features.Where(IsEnabled); }
         }
 
         public bool IsEnabled(string name)
         {
-            var feature = GetFeature(name);
+            return IsEnabled(GetFeature(name));
+        }
 
-            return feature != null && feature.Enabled;
+        public bool IsEnabled(FeatureToggle feature)
+        {
+            if (feature == null)
+                return false;
+
+            var overrides = GetOverrides();
+            if (overrides.ContainsKey(feature.Name))
+            {
+                return overrides[feature.Name];
+            }
+            return feature.Enabled;
         }
 
         public FeatureToggle GetFeature(string name)
         {
             return _features.FirstOrDefault(x => x.Name == name);
         }
+
+        public Func<Dictionary<string, bool>> GetOverrides = () => new Dictionary<string, bool>();
     }
 
     public class FeatureToggle
@@ -56,6 +69,20 @@ namespace Aqueduct.Toggles
             }
         }
 
+        public FeatureToggle ShallowClone()
+        {
+            var cloned = new FeatureToggle
+            {
+                Enabled = Enabled,
+                Items = Items,
+                Languages = Languages,
+                Name = Name,
+                Renderings = Renderings,
+                Templates = Templates
+            };
+            return cloned;
+        }
+
         private void UpdateLanguagesList(string value)
         {
             var languages = !string.IsNullOrEmpty(value) ? value.Split(',') : Enumerable.Empty<string>();
@@ -64,8 +91,7 @@ namespace Aqueduct.Toggles
         }
 
         internal List<string> LanguagesList { get; set; } 
-
-
+        
         public bool EnabledForLanguage(string language)
         {
             if (string.IsNullOrWhiteSpace(language))

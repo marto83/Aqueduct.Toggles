@@ -18,6 +18,13 @@ namespace Aqueduct.Toggles
             if (FeatureToggleConfiguration == null) throw new ConfigurationErrorsException("Missing featureToggles section in config.");
 
             Configuration.LoadFromConfiguration(FeatureToggleConfiguration);
+            Configuration.GetOverrides = GetUserOverrides;
+        }
+
+        public static Func<Dictionary<string, bool>> GetUserOverrides
+        {
+            get { return Configuration.GetOverrides; }
+            set { Configuration.GetOverrides = value; }
         }
 
         public static bool IsEnabled(string name)
@@ -27,7 +34,7 @@ namespace Aqueduct.Toggles
 
         public static string GetCssClassesForFeatures(string currentLanguage)
         {
-            var enabled = Configuration.AllFeatures.Where(x => x.Enabled && x.EnabledForLanguage(currentLanguage))
+            var enabled = Configuration.EnabledFeatures.Where(x => x.EnabledForLanguage(currentLanguage))
                                                     .Select(x => string.Concat("feat-", x.Name))
                                                     .ToArray();
             return string.Join(" ", enabled);
