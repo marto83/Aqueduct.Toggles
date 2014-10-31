@@ -79,7 +79,8 @@ namespace Aqueduct.Toggles
 
             return new LayoutReplacement
                        {
-                           LayoutId = replacement.New,
+                           NewLayoutId = replacement.New,
+                           LayoutId = replacement.New ?? replacement.Id,
                            Sublayouts = replacement.Renderings
                                                    .Select(x => new LayoutReplacement.SublayoutReplacement
                                                                     {

@@ -21,9 +21,9 @@ namespace Aqueduct.Toggles.Sitecore
             {
                 var replacement = FeatureToggles.GetLayoutReplacement(itemId, templateId, currentLanguage);
 
-                if (replacement.LayoutId.HasValue)
+                if (replacement.NewLayoutId.HasValue)
                 {
-                    LayoutItem pageEditLayout = Context.Database.GetItem(new ID(replacement.LayoutId.Value));
+                    LayoutItem pageEditLayout = Context.Database.GetItem(new ID(replacement.NewLayoutId.Value));
                     Context.Page.FilePath = pageEditLayout.FilePath;
                 }
             }

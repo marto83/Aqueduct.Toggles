@@ -20,7 +20,7 @@ namespace Aqueduct.Toggles.Tests
                                                                   Guid.NewGuid(), "current");
 
             Assert.IsNotNull(replacement);
-            Assert.AreEqual(new Guid("{0C993911-CCAB-4303-8D6F-9811E0BB0847}"), replacement.LayoutId);
+            Assert.AreEqual(new Guid("{0C993911-CCAB-4303-8D6F-9811E0BB0847}"), replacement.NewLayoutId);
             var sublayouts = replacement.Sublayouts.ToArray();
             Assert.AreEqual(3, replacement.Sublayouts.Count);
             Assert.AreEqual("topnav", sublayouts[0].Placeholder);
@@ -36,7 +36,7 @@ namespace Aqueduct.Toggles.Tests
                                                                   Guid.NewGuid(), "current");
 
             Assert.IsNotNull(replacement);
-            Assert.IsNull(replacement.LayoutId);
+            Assert.IsNull(replacement.NewLayoutId);
         }
     }
 }

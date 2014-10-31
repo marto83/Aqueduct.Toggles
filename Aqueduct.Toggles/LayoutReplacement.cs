@@ -5,7 +5,9 @@ namespace Aqueduct.Toggles
 {
     public class LayoutReplacement
     {
-        public Guid? LayoutId { get; set; }
+        public Guid? NewLayoutId { get; set; }
+        public Guid LayoutId { get; set; }
+
         public IList<SublayoutReplacement> Sublayouts { get; set; }
 
         public class SublayoutReplacement

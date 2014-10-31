@@ -39,6 +39,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Sitecore.Kernel.dll</HintPath>
     </Reference>
+    <Reference Include="Sitecore.Mvc">
+      <HintPath>..\lib\Sitecore.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -75,13 +78,14 @@
     <Compile Include="Sitecore\LayoutResolver.cs" />
     <Compile Include="Sitecore\LayoutProcessor.cs" />
     <Compile Include="RenderingReplacement.cs" />
+    <Compile Include="Sitecore\ProcessXmlBasedLayoutDefinition.cs" />
     <Compile Include="TogglePlaceholder.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Config\FeatureToggles.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Config\Include\Aqueduct.Toggles.config">
+    <Content Include="App_Config\Include\ZAqueduct.Toggles.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="__Admin\FeatureToggles.aspx">
