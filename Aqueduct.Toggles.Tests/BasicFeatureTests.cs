@@ -41,6 +41,20 @@ namespace Aqueduct.Toggles.Tests
         }
 
         [Test]
+        public void GetAllFeatures_ReturnsFeaturesDescriptionAndStepsAlongWithTheFeatures()
+        {
+            //Arrange
+            var feature = FeatureToggles.GetAllFeatures().First();
+
+            //Assert
+            Assert.IsNotNull(feature);
+            Assert.AreEqual("Short description", feature.ShortDescription);
+            Assert.AreEqual("<li>Step1</li>", feature.Requirements);
+
+
+        }
+
+        [Test]
         public void GetAllFeatures_GivenFeatureEnabledConfigButOverriddenByTheUser_ReturnsDisabledFeature()
         {
             FeatureToggles.GetUserOverrides = () => new Dictionary<string, bool>() { { "featureenabled", false } };

@@ -12,6 +12,10 @@ namespace Aqueduct.Toggles
         public string Name { get; set; }
         public bool Enabled { get; set; }
 
+        public string ShortDescription { get; set; }
+
+        public string Requirements { get; set; }
+
         private string _languages;
         internal string Languages
         {
@@ -61,6 +65,11 @@ namespace Aqueduct.Toggles
             feature.Enabled = element.Enabled;
             feature.Languages = element.Languages;
             feature.Name = element.Name;
+            if (element.Help != null)
+            {
+                feature.ShortDescription = element.Help.Description.Value;
+                feature.Requirements = element.Help.Requirements.Value;
+            }
 
             feature.Renderings =
                 element.Renderings.Cast<FeatureRenderingConfigurationElement>()
