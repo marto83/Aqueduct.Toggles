@@ -15,7 +15,8 @@ namespace Aqueduct.Toggles
         public string ShortDescription { get; set; }
 
         public string Requirements { get; set; }
-
+        public string IssueTrackingReference { get; set; }
+        public string ReleaseDate { get; set; }
         private string _languages;
         internal string Languages
         {
@@ -69,6 +70,8 @@ namespace Aqueduct.Toggles
             {
                 feature.ShortDescription = element.Help.Description.Value;
                 feature.Requirements = element.Help.Requirements.Value;
+                feature.IssueTrackingReference = element.Help.IssueTrackingReference.Value;
+                feature.ReleaseDate = element.Help.ReleaseDate.Value;
             }
 
             feature.Renderings =

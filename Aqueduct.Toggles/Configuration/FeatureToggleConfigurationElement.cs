@@ -13,6 +13,19 @@ namespace Aqueduct.Toggles.Configuration
             get { return (CDataElement)this["description"]; }
         }
 
+        [ConfigurationProperty("releaseDate", IsRequired = false)]
+        public CDataElement ReleaseDate
+        {
+            get { return (CDataElement)this["releaseDate"]; }
+        }
+
+        [ConfigurationProperty("issueTrackingReference", IsRequired = false)]
+        public CDataElement IssueTrackingReference
+        {
+            get { return (CDataElement)this["issueTrackingReference"]; }
+        }
+
+
         [ConfigurationProperty("requirements", IsRequired = false)]
         public CDataElement Requirements
         {
