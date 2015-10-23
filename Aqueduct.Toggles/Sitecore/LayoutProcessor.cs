@@ -66,7 +66,7 @@ namespace Aqueduct.Toggles.Sitecore
             }
         }
 
-        private RenderingReference GetRenderingByItemId(Guid itemId, string placeholder)
+        private static RenderingReference GetRenderingByItemId(Guid itemId, string placeholder)
         {
             var renderingItem = (RenderingItem)Context.Database.GetItem(new ID(itemId));
 

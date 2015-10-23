@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqueduct.Toggles", "Aqueduct.Toggles\Aqueduct.Toggles.csproj", "{2AD2F4E0-8C0A-4F4B-A397-3AC88FB4988C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqueduct.Toggles.Tests", "Aqueduct.Toggles.Tests\Aqueduct.Toggles.Tests.csproj", "{59173199-E5AC-449D-8FFA-D2424FB9F9C8}"

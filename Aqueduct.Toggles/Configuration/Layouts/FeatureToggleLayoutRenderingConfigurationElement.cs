@@ -6,21 +6,12 @@ namespace Aqueduct.Toggles.Configuration.Layouts
     internal class FeatureToggleLayoutRenderingConfigurationElement : ConfigurationElement
     {
         [ConfigurationProperty("name", IsRequired = true, IsKey = true)]
-        internal string Name
-        {
-            get { return (string)this["name"]; }
-        }
+        internal string Name => (string)this["name"];
 
         [ConfigurationProperty("placeholder")]
-        internal string Placeholder
-        {
-            get { return (string)this["placeholder"]; }
-        }
+        internal string Placeholder => (string)this["placeholder"];
 
         [ConfigurationProperty("id", IsRequired = true)]
-        internal Guid SublayoutId
-        {
-            get { return (Guid)this["id"]; }
-        }
+        internal Guid SublayoutId => (Guid)this["id"];
     }
 }

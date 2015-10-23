@@ -8,30 +8,17 @@ namespace Aqueduct.Toggles.Configuration
     public class FeatureToggleHelpConfigurationElement : ConfigurationElement
     {
         [ConfigurationProperty("description", IsRequired = false)]
-        public CDataElement Description
-        {
-            get { return (CDataElement)this["description"]; }
-        }
+        public CDataElement Description => (CDataElement)this["description"];
 
         [ConfigurationProperty("releaseDate", IsRequired = false)]
-        public CDataElement ReleaseDate
-        {
-            get { return (CDataElement)this["releaseDate"]; }
-        }
+        public CDataElement ReleaseDate => (CDataElement)this["releaseDate"];
 
         [ConfigurationProperty("issueTrackingReference", IsRequired = false)]
-        public CDataElement IssueTrackingReference
-        {
-            get { return (CDataElement)this["issueTrackingReference"]; }
-        }
+        public CDataElement IssueTrackingReference => (CDataElement)this["issueTrackingReference"];
 
 
         [ConfigurationProperty("requirements", IsRequired = false)]
-        public CDataElement Requirements
-        {
-            get { return (CDataElement)this["requirements"]; }
-        }
-
+        public CDataElement Requirements => (CDataElement)this["requirements"];
     }
 
     public class CDataElement : ConfigurationElement
@@ -47,48 +34,27 @@ namespace Aqueduct.Toggles.Configuration
     public class FeatureToggleConfigurationElement : ConfigurationElement
     {
         [ConfigurationProperty("name", IsRequired = true, IsKey = true)]
-        public string Name
-        {
-            get { return (string)this["name"]; }
-        }
+        public string Name => (string)this["name"];
 
         [ConfigurationProperty("enabled", IsRequired = true)]
-        public bool Enabled
-        {
-            get { return (bool)this["enabled"]; }
-        }
+        public bool Enabled => (bool)this["enabled"];
 
         [ConfigurationProperty("help")]
-        public FeatureToggleHelpConfigurationElement Help
-        {
-            get { return (FeatureToggleHelpConfigurationElement)this["help"]; }
-        }
+        public FeatureToggleHelpConfigurationElement Help => (FeatureToggleHelpConfigurationElement)this["help"];
 
         [ConfigurationProperty("languages")]
-        internal string Languages
-        {
-            get { return (string)this["languages"]; }
-        }
+        internal string Languages => (string)this["languages"];
 
         [ConfigurationProperty("renderings", IsDefaultCollection = true)]
         [ConfigurationCollection(typeof(FeatureRenderingConfigurationCollection), AddItemName = "rendering")]
-        internal FeatureRenderingConfigurationCollection Renderings
-        {
-            get { return base["renderings"] as FeatureRenderingConfigurationCollection; }
-        }
+        internal FeatureRenderingConfigurationCollection Renderings => base["renderings"] as FeatureRenderingConfigurationCollection;
 
         [ConfigurationProperty("items", IsDefaultCollection = true)]
         [ConfigurationCollection(typeof(BaseFeatureToggleLayoutConfigurationCollection), AddItemName = "item")]
-        internal BaseFeatureToggleLayoutConfigurationCollection Items
-        {
-            get { return base["items"] as BaseFeatureToggleLayoutConfigurationCollection; }
-        }
+        internal BaseFeatureToggleLayoutConfigurationCollection Items => base["items"] as BaseFeatureToggleLayoutConfigurationCollection;
 
         [ConfigurationProperty("templates", IsDefaultCollection = true)]
         [ConfigurationCollection(typeof(BaseFeatureToggleLayoutConfigurationCollection), AddItemName = "template")]
-        internal BaseFeatureToggleLayoutConfigurationCollection Templates
-        {
-            get { return base["templates"] as BaseFeatureToggleLayoutConfigurationCollection; }
-        }
+        internal BaseFeatureToggleLayoutConfigurationCollection Templates => base["templates"] as BaseFeatureToggleLayoutConfigurationCollection;
     }
 }

@@ -14,15 +14,9 @@ namespace Aqueduct.Toggles
             _features = config.Features.Cast<FeatureToggleConfigurationElement>().Select(Feature.FromConfig).ToList();
         }
 
-        public IEnumerable<Feature> AllFeatures
-        {
-            get { return _features; }
-        }
+        public IEnumerable<Feature> AllFeatures => _features;
 
-        public IEnumerable<Feature> EnabledFeatures
-        {
-            get { return _features.Where(IsEnabled); }
-        }
+        public IEnumerable<Feature> EnabledFeatures => _features.Where(IsEnabled);
 
         public bool IsEnabled(string name)
         {

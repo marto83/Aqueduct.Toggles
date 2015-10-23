@@ -33,7 +33,7 @@ namespace Aqueduct.Toggles
         public static string GetCssClassesForFeatures(string currentLanguage)
         {
             var enabled = Configuration.EnabledFeatures.Where(x => x.EnabledForLanguage(currentLanguage))
-                                                    .Select(x => string.Concat("feat-", x.Name))
+                                                    .Select(x => $"feat-{x.Name}")
                                                     .ToArray();
             return string.Join(" ", enabled);
         }
@@ -75,7 +75,7 @@ namespace Aqueduct.Toggles
         internal static LayoutReplacement GetLayoutReplacement(Guid itemId, Guid templateId, string currentLanguage)
         {
             var replacement = GetLayoutReplacementElement(itemId, templateId, currentLanguage);
-            if (replacement == null) throw new ArgumentException(string.Format("Cannot find replacement layout for item ID: {0}, template ID: {1}", itemId, templateId));
+            if (replacement == null) throw new ArgumentException($"Cannot find replacement layout for item ID: {itemId}, template ID: {templateId}");
 
             return new LayoutReplacement
                        {

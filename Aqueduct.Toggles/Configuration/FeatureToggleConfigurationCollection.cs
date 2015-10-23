@@ -4,10 +4,7 @@ namespace Aqueduct.Toggles.Configuration
 {
     internal class FeatureToggleConfigurationCollection : ConfigurationElementCollection
     {
-        internal new FeatureToggleConfigurationElement this[string name]
-        {
-            get { return (FeatureToggleConfigurationElement)BaseGet(name); }
-        }
+        internal new FeatureToggleConfigurationElement this[string name] => (FeatureToggleConfigurationElement)BaseGet(name);
 
         protected override ConfigurationElement CreateNewElement()
         {

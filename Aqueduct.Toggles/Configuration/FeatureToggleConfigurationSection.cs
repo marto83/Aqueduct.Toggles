@@ -6,6 +6,6 @@ namespace Aqueduct.Toggles.Configuration
     {
         [ConfigurationProperty("", IsDefaultCollection = true)]
         [ConfigurationCollection(typeof(FeatureToggleConfigurationCollection), AddItemName = "feature")]
-        internal FeatureToggleConfigurationCollection Features { get { return base[""] as FeatureToggleConfigurationCollection; } }
+        internal FeatureToggleConfigurationCollection Features => base[""] as FeatureToggleConfigurationCollection;
     }
 }

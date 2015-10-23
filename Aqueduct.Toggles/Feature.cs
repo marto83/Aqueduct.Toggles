@@ -62,10 +62,12 @@ namespace Aqueduct.Toggles
         {
             Contract.Assert(element != null);
 
-            var feature = new Feature();
-            feature.Enabled = element.Enabled;
-            feature.Languages = element.Languages;
-            feature.Name = element.Name;
+            var feature = new Feature
+                          {
+                              Enabled = element.Enabled,
+                              Languages = element.Languages,
+                              Name = element.Name
+                          };
             if (element.Help != null)
             {
                 feature.ShortDescription = element.Help.Description.Value;
