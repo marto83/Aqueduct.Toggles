@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="BasicFeatureTests.cs" />
     <Compile Include="FeatureCleanupAttributeTests.cs" />
+    <Compile Include="FeatureTogglesTests.cs" />
     <Compile Include="GetLayoutReplacementTests.cs" />
     <Compile Include="GetAllSublayoutReplacementTests.cs" />
     <Compile Include="HasLanguagesTests.cs" />

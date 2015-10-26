@@ -9,7 +9,7 @@ namespace Aqueduct.Toggles
     internal class FeatureConfiguration
     {
         private IList<Feature> _features = new List<Feature>();
-        private IOverrideProvider _provider;
+        internal IOverrideProvider Provider;
 
         internal void LoadFromConfiguration(FeatureToggleConfigurationSection config)
         {
@@ -18,16 +18,16 @@ namespace Aqueduct.Toggles
 
         internal void SetOverrideProvider(IOverrideProvider provider)
         {
-            _provider = provider;
+            Provider = provider;
         }
-
+        
         public IEnumerable<Feature> AllFeatures => _features;
 
         public IEnumerable<Feature> EnabledFeatures => _features.Where(IsEnabled);
 
         public bool IsEnabled(string name)
         {
-            var overrides = _provider.GetOverrides();
+            var overrides = Provider.GetOverrides();
             if (overrides.ContainsKey(name)) return overrides[name];
 
             return IsEnabled(GetFeature(name));
@@ -38,7 +38,7 @@ namespace Aqueduct.Toggles
             if (feature == null)
                 return false;
 
-            var overrides = _provider.GetOverrides();
+            var overrides = Provider.GetOverrides();
             return overrides.ContainsKey(feature.Name) ? overrides[feature.Name] : feature.Enabled;
         }
 

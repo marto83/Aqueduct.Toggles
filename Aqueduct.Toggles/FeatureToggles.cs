@@ -25,6 +25,11 @@ namespace Aqueduct.Toggles
             Configuration.SetOverrideProvider(provider);
         }
 
+        public static Dictionary<string, bool> GetCurrentOverrides()
+        {
+            return Configuration.Provider.GetOverrides();
+        }
+
         public static bool IsEnabled(string name)
         {
             return Configuration.IsEnabled(name);
