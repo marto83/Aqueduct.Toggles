@@ -14,17 +14,14 @@ namespace Aqueduct.Toggles.Tests
     public class FeatureTogglesTests
     {
         [Test]
-        public void GetCurrentOverrides_GivenOverrideProvider_ReturnsOverrides()
+        public void GetOverrideProvider_ReturnsCurrentProvider()
         {
             var provider = Substitute.For<IOverrideProvider>();
-            provider.GetOverrides().Returns(new Dictionary<string, bool> {{"test1", true}});
             FeatureToggles.SetOverrideProvider(provider);
 
-            var overrides = FeatureToggles.GetCurrentOverrides();
+            var overrides = FeatureToggles.GetOverrideProvider();
 
-            overrides.Should().HaveCount(1);
-            overrides.Should().ContainKey("test1");
-            overrides["test1"].Should().BeTrue();
+            overrides.Should().Be(provider);
         }
     }
 }
