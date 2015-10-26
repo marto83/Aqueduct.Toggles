@@ -15,27 +15,24 @@ namespace Aqueduct.Toggles.Overrides
             _context = context;
         }
 
-        public CookieOverrideProvider() : this(InitializeContext())
+        public CookieOverrideProvider()
         {
-        }
-
-        private static HttpContextBase InitializeContext()
-        {
-            return HttpContext.Current != null ? new HttpContextWrapper(HttpContext.Current) : null;
         }
 
         public Dictionary<string, bool> GetOverrides()
         {
+            var context = GetCurrentContext();
+
             var dictionary = new Dictionary<string, bool>();
 
-            if (_context == null)
+            if (context == null)
                 return dictionary;
 
-            var request = _context.Request;
+            var request = context.Request;
 
-            if (_context.Items[CookieName] != null)
+            if (context.Items[CookieName] != null)
             {
-                return _context.Items[CookieName] as Dictionary<string, bool>;
+                return context.Items[CookieName] as Dictionary<string, bool>;
             }
 
             var cookie = request.Cookies[CookieName];
@@ -45,7 +42,7 @@ namespace Aqueduct.Toggles.Overrides
                 {
                     var decryptedValue = cookie.Value.Decrypt();
                     var features = decryptedValue.Deserialize<Dictionary<string, bool>>();
-                    _context.Items[CookieName] = features;
+                    context.Items[CookieName] = features;
 
                     return features;
                 }
@@ -57,10 +54,20 @@ namespace Aqueduct.Toggles.Overrides
             return dictionary;
         }
 
+        private HttpContextBase GetCurrentContext()
+        {
+            var context = _context;
+            if (context == null && HttpContext.Current != null)
+                context = new HttpContextWrapper(HttpContext.Current);
+            return context;
+        }
+
         public void SetOverrides(Dictionary<string, bool> overrides)
         {
+            var context = GetCurrentContext();
+
             var cookie = new HttpCookie(CookieName, overrides.Serialize().Encrypt()) {HttpOnly = true};
-            _context.Response.Cookies.Add(cookie);
+            context.Response.Cookies.Add(cookie);
         }
     }
 }
