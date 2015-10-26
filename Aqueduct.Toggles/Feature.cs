@@ -11,12 +11,11 @@ namespace Aqueduct.Toggles
     {
         public string Name { get; set; }
         public bool Enabled { get; set; }
-
         public string ShortDescription { get; set; }
-
         public string Requirements { get; set; }
         public string IssueTrackingReference { get; set; }
         public string ReleaseDate { get; set; }
+
         private string _languages;
         internal string Languages
         {

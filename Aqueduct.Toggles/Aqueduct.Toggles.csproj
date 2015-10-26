@@ -46,6 +46,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -58,6 +59,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Configuration\EncryptionConfigurationElement.cs" />
     <Compile Include="Configuration\Layouts\FeatureToggleLayoutConfigurationCollection.cs" />
     <Compile Include="Configuration\Layouts\FeatureToggleLayoutRenderingsConfigurationCollection.cs" />
     <Compile Include="Configuration\Layouts\FeatureToggleLayoutRenderingConfigurationElement.cs" />
@@ -66,6 +68,11 @@
     <Compile Include="Configuration\FeatureToggleConfigurationCollection.cs" />
     <Compile Include="Configuration\FeatureToggleConfigurationElement.cs" />
     <Compile Include="Configuration\Layouts\FeatureToggleLayoutConfigurationElement.cs" />
+    <Compile Include="Helpers\EncryptionHelper.cs" />
+    <Compile Include="Helpers\SerializationHelpers.cs" />
+    <Compile Include="Overrides\CookieOverrideProvider.cs" />
+    <Compile Include="Overrides\IOverrideProvider.cs" />
+    <Compile Include="FeatureCleanupAttribute.cs" />
     <Compile Include="FeatureConfiguration.cs" />
     <Compile Include="Feature.cs" />
     <Compile Include="FeatureToggles.cs" />
@@ -99,6 +106,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -2,16 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Aqueduct.Toggles.Configuration;
+using Aqueduct.Toggles.Overrides;
 
 namespace Aqueduct.Toggles
 {
     internal class FeatureConfiguration
     {
         private IList<Feature> _features = new List<Feature>();
+        private IOverrideProvider _provider;
 
         internal void LoadFromConfiguration(FeatureToggleConfigurationSection config)
         {
             _features = config.Features.Cast<FeatureToggleConfigurationElement>().Select(Feature.FromConfig).ToList();
+        }
+
+        internal void SetOverrideProvider(IOverrideProvider provider)
+        {
+            _provider = provider;
         }
 
         public IEnumerable<Feature> AllFeatures => _features;
@@ -20,6 +27,9 @@ namespace Aqueduct.Toggles
 
         public bool IsEnabled(string name)
         {
+            var overrides = _provider.GetOverrides();
+            if (overrides.ContainsKey(name)) return overrides[name];
+
             return IsEnabled(GetFeature(name));
         }
 
@@ -28,19 +38,13 @@ namespace Aqueduct.Toggles
             if (feature == null)
                 return false;
 
-            var overrides = GetOverrides();
-            if (overrides.ContainsKey(feature.Name))
-            {
-                return overrides[feature.Name];
-            }
-            return feature.Enabled;
+            var overrides = _provider.GetOverrides();
+            return overrides.ContainsKey(feature.Name) ? overrides[feature.Name] : feature.Enabled;
         }
 
         public Feature GetFeature(string name)
         {
-            return _features.FirstOrDefault(x => x.Name == name);
+            return _features.FirstOrDefault(x => x.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
         }
-
-        public Func<Dictionary<string, bool>> GetOverrides = () => new Dictionary<string, bool>();
     }
 }

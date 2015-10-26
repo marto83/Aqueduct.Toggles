@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using Aqueduct.Toggles.Configuration;
+using Aqueduct.Toggles.Overrides;
 
 namespace Aqueduct.Toggles
 {
@@ -16,13 +17,12 @@ namespace Aqueduct.Toggles
             if (FeatureToggleConfiguration == null) throw new ConfigurationErrorsException("Missing featureToggles section in config.");
 
             Configuration.LoadFromConfiguration(FeatureToggleConfiguration);
-            Configuration.GetOverrides = GetUserOverrides;
+            SetOverrideProvider(new CookieOverrideProvider());
         }
 
-        public static Func<Dictionary<string, bool>> GetUserOverrides
+        public static void SetOverrideProvider(IOverrideProvider provider)
         {
-            get { return Configuration.GetOverrides; }
-            set { Configuration.GetOverrides = value; }
+            Configuration.SetOverrideProvider(provider);
         }
 
         public static bool IsEnabled(string name)
@@ -38,11 +38,16 @@ namespace Aqueduct.Toggles
             return string.Join(" ", enabled);
         }
 
-        public static IList<Feature> GetAllFeatures()
+        public static IEnumerable<Feature> GetAllFeatures()
         {
             return Configuration.AllFeatures.ToList();
         }
-      
+
+        public static IEnumerable<Feature> GetAllEnabledFeatures()
+        {
+            return GetAllFeatures().Where(x => IsEnabled(x.Name));
+        }
+
         internal static IEnumerable<RenderingReplacement> GetAllRenderingReplacements(string currentLanguage)
         {
             var allFeatures = Configuration.EnabledFeatures.Where(x => x.EnabledForLanguage(currentLanguage));
