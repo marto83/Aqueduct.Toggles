@@ -5,7 +5,7 @@ using Aqueduct.Toggles.Configuration;
 
 namespace Aqueduct.Toggles.Helpers
 {
-    internal static class EncryptionHelper
+    public static class EncryptionHelper
     {
         private const string Splitter = "///===///";
 

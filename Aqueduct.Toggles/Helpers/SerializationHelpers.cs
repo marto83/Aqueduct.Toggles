@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Aqueduct.Toggles.Helpers
 {
-    internal static class SerializationHelpers
+    public static class SerializationHelpers
     {
         public static string Serialize<T>(this T obj)
         {
