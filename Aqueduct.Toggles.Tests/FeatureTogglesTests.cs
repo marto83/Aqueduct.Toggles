@@ -23,5 +23,11 @@ namespace Aqueduct.Toggles.Tests
 
             overrides.Should().Be(provider);
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            FeatureToggles.SetOverrideProvider(new CookieOverrideProvider());
+        }
     }
 }
