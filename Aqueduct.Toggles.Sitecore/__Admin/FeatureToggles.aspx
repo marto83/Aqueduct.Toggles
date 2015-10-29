@@ -26,7 +26,7 @@
     <title>Feature Toggles</title>
   </head>
   <body>
-      <asp:Placeholder ID="FeatureTogglePlaceholder" runat="server" Visible="False">
+      <asp:PlaceHolder ID="FeatureTogglePlaceholder" runat="server" Visible="False">
       <h1>Feature Toggles</h1>
       
       <p>Listed below is the list of feature toggles currently configured for this site.</p>
@@ -56,6 +56,6 @@
         </FooterTemplate>
       </asp:Repeater>
 
-      </asp:Placeholder>
+      </asp:PlaceHolder>
   </body>
 </html>

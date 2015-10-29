@@ -2,7 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 
-namespace Aqueduct.Toggles.Tests
+namespace Aqueduct.Toggles.Sitecore.Tests
 {
     [TestFixture]
     public class GetAllSublayoutReplacementTests
@@ -10,7 +10,7 @@ namespace Aqueduct.Toggles.Tests
         [Test]
         public void GetsSublayoutsCorrectly_IgnoringDisabledFeaturesAndOnesForOtherLanguages()
         {
-            var sublayouts = FeatureToggles.GetAllRenderingReplacements("current").ToArray();
+            var sublayouts = SitecoreFeatureToggles.GetAllRenderingReplacements("current").ToArray();
 
             Assert.AreEqual(3, sublayouts.Length);
             Assert.IsTrue(sublayouts[0].Enabled);

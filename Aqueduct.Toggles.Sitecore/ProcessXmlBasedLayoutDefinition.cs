@@ -13,7 +13,7 @@ namespace Aqueduct.Toggles.Sitecore
     {
         public override void Process(BuildPageDefinitionArgs args)
         {
-            Assert.ArgumentNotNull(args, "args");
+            Assert.ArgumentNotNull((object) args, "args");
       
             var item = Context.Item;
             if (item == null) return;
@@ -28,10 +28,10 @@ namespace Aqueduct.Toggles.Sitecore
             if (pageDefinition == null)
                 return;
 
-            if (FeatureToggles.ShouldReplaceLayout(itemId, templateId, currentLanguage))
+            if (SitecoreFeatureToggles.ShouldReplaceLayout(itemId, templateId, currentLanguage))
             {
                 //resolve all the renderings from the featuretoggle
-                var layoutReplacement = FeatureToggles.GetLayoutReplacement(itemId, templateId, currentLanguage);
+                var layoutReplacement = SitecoreFeatureToggles.GetLayoutReplacement(itemId, templateId, currentLanguage);
                 var layoutRendering = renderingBuilder.GetRenederingById(layoutReplacement.LayoutId);
                 layoutRendering.RenderingType = "Layout";
                 pageDefinition.Renderings.Add(layoutRendering);
@@ -46,7 +46,7 @@ namespace Aqueduct.Toggles.Sitecore
             else
             {
                 base.Process(args);
-                var renderingReplacements = FeatureToggles.GetAllRenderingReplacements(currentLanguage);
+                var renderingReplacements = SitecoreFeatureToggles.GetAllRenderingReplacements(currentLanguage);
                 //loop through and replace the one I need to replace
                 foreach (var replacement in renderingReplacements)
                 {

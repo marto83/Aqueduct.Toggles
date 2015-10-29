@@ -1,36 +1,9 @@
 ﻿using System.Configuration;
-using System.Xml;
 using Aqueduct.Toggles.Configuration.Layouts;
 using Aqueduct.Toggles.Configuration.Renderings;
 
 namespace Aqueduct.Toggles.Configuration
 {
-    public class FeatureToggleHelpConfigurationElement : ConfigurationElement
-    {
-        [ConfigurationProperty("description", IsRequired = false)]
-        public CDataElement Description => (CDataElement)this["description"];
-
-        [ConfigurationProperty("releaseDate", IsRequired = false)]
-        public CDataElement ReleaseDate => (CDataElement)this["releaseDate"];
-
-        [ConfigurationProperty("issueTrackingReference", IsRequired = false)]
-        public CDataElement IssueTrackingReference => (CDataElement)this["issueTrackingReference"];
-
-
-        [ConfigurationProperty("requirements", IsRequired = false)]
-        public CDataElement Requirements => (CDataElement)this["requirements"];
-    }
-
-    public class CDataElement : ConfigurationElement
-    {
-        protected override void DeserializeElement(XmlReader reader, bool s)
-        {
-            Value = reader.ReadElementContentAs(typeof(string), null) as string;
-        }
-
-        public string Value { get; private set; }
-    }
-
     public class FeatureToggleConfigurationElement : ConfigurationElement
     {
         [ConfigurationProperty("name", IsRequired = true, IsKey = true)]

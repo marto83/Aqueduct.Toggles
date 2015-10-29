@@ -1,8 +1,10 @@
 using System.ComponentModel;
 using System.Web.UI;
+using System.Web.UI.Adapters;
 using System.Web.UI.WebControls;
+using Sitecore.Web;
 
-namespace Aqueduct.Toggles
+namespace Aqueduct.Toggles.Sitecore
 {
     [ParseChildren(ChildrenAsProperties = true)]
     public class TogglePlaceholder : CompositeControl

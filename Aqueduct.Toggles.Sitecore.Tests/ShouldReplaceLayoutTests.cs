@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 
-namespace Aqueduct.Toggles.Tests
+namespace Aqueduct.Toggles.Sitecore.Tests
 {
     [TestFixture]
     public class ShouldReplaceLayoutTests
@@ -12,7 +12,7 @@ namespace Aqueduct.Toggles.Tests
         [TestCase("{78FB424D-565B-4543-91AE-F7C0DC2D8018}", "{03AFA791-2A92-46E8-8A10-47EC6502B633}", "fake", false, Description = "Language Wrong")]
         public void ShouldReplaceLayout_CorrectlyIdentifiesWhetherToReplaceLayout(string itemId, string templateId, string currentLanguage, bool expected)
         {
-            var replace = FeatureToggles.ShouldReplaceLayout(new Guid(itemId), new Guid(templateId), currentLanguage);
+            var replace = SitecoreFeatureToggles.ShouldReplaceLayout(new Guid(itemId), new Guid(templateId), currentLanguage);
 
             Assert.AreEqual(expected, replace);
         }
@@ -20,7 +20,7 @@ namespace Aqueduct.Toggles.Tests
         [Test]
         public void ShouldReplaceLayout_GivenFeatureWithMultipleLayoutsToReplace_ReturnsTrue()
         {
-            var replace = FeatureToggles.ShouldReplaceLayout(new Guid("{EBAEDE0D-592A-48B3-B4BF-3E40E93B05E5}"), Guid.NewGuid(), "current");
+            var replace = SitecoreFeatureToggles.ShouldReplaceLayout(new Guid("{EBAEDE0D-592A-48B3-B4BF-3E40E93B05E5}"), Guid.NewGuid(), "current");
 
             Assert.IsTrue(replace);
         }
@@ -28,7 +28,7 @@ namespace Aqueduct.Toggles.Tests
         [Test]
         public void ShouldReplaceLayout_GivenTemplateId_InDisabledFeature_ReturnsFalse()
         {
-            var replace = FeatureToggles.ShouldReplaceLayout(Guid.NewGuid(), new Guid("{30B677BC-C59D-460A-91E6-C9F9298EBC5A}"), "current");
+            var replace = SitecoreFeatureToggles.ShouldReplaceLayout(Guid.NewGuid(), new Guid("{30B677BC-C59D-460A-91E6-C9F9298EBC5A}"), "current");
 
             Assert.IsFalse(replace);
         }
@@ -36,7 +36,7 @@ namespace Aqueduct.Toggles.Tests
         [Test]
         public void ShouldReplaceLayout_GivenItemId_InDisabledFeature_ReturnsFalse()
         {
-            var replace = FeatureToggles.ShouldReplaceLayout(new Guid("{70BF5667-5ECA-440C-BFCE-B6ED24B7EE15}"), Guid.NewGuid(), "current");
+            var replace = SitecoreFeatureToggles.ShouldReplaceLayout(new Guid("{70BF5667-5ECA-440C-BFCE-B6ED24B7EE15}"), Guid.NewGuid(), "current");
 
             Assert.IsFalse(replace);
         }

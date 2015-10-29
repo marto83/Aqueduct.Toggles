@@ -7,9 +7,4 @@ namespace Aqueduct.Toggles.Configuration
         [ConfigurationProperty("key", IsRequired = true)]
         public string Key => (string) this["key"];
     }
-
-    public interface IEncryptionConfiguration
-    {
-        string Key { get; }
-    }
 }
