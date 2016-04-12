@@ -22,7 +22,7 @@ namespace Aqueduct.Toggles
             {
                 Id = element.Id,
                 New = element.New,
-                Renderings = element.Renderings.Cast<FeatureToggleLayoutRenderingConfigurationElement>().Select(LayoutToggleRendering.FromConfing).ToList()
+                Renderings = element.Renderings.Cast<FeatureToggleLayoutRenderingConfigurationElement>().Select(LayoutToggleRendering.FromConfig).ToList()
             };
         }
     }
