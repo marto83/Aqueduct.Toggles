@@ -9,7 +9,7 @@ namespace Aqueduct.Toggles
         public string PlaceHolder { get; set; }
         public Guid SublayoutId { get; set; }
 
-        internal static LayoutToggleRendering FromConfing(FeatureToggleLayoutRenderingConfigurationElement element)
+        internal static LayoutToggleRendering FromConfig(FeatureToggleLayoutRenderingConfigurationElement element)
         {
             return new LayoutToggleRendering
             {
