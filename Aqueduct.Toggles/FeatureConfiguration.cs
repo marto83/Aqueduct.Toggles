@@ -27,10 +27,13 @@ namespace Aqueduct.Toggles
 
         public bool IsEnabled(string name)
         {
-            var overrides = Provider.GetOverrides();
-            if (overrides.ContainsKey(name)) return overrides[name];
+            return IsEnabledByOverride(name) ??
+            IsEnabled(GetFeature(name));
+        }
 
-            return IsEnabled(GetFeature(name));
+        private bool? IsEnabledByOverride(string name)
+        {
+            return Provider.GetOverrides().FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase))?.Enabled;
         }
 
         public bool IsEnabled(Feature feature)
@@ -38,8 +41,7 @@ namespace Aqueduct.Toggles
             if (feature == null)
                 return false;
 
-            var overrides = Provider.GetOverrides();
-            return overrides.ContainsKey(feature.Name) ? overrides[feature.Name] : feature.Enabled;
+            return IsEnabledByOverride(feature.Name) ?? feature.Enabled;
         }
 
         public Feature GetFeature(string name)

@@ -4,7 +4,8 @@ namespace Aqueduct.Toggles.Overrides
 {
     public interface IOverrideProvider
     {
-        Dictionary<string, bool> GetOverrides();
-        void SetOverrides(Dictionary<string, bool> overrides);
+        string Name { get; }
+        IEnumerable<Override> GetOverrides();
+        void SetOverrides(IEnumerable<Override> overrides);
     }
 }

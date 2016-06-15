@@ -13,19 +13,17 @@ namespace Aqueduct.Toggles.Tests
         [SetUp]
         public void Setup()
         {
-            SetupOverrides(new Dictionary<string, bool>
-                           {
-                               {"featureenabledbutoverridden", false},
-                               {"featuredisabledbutoverridden", true},
-                               {"featuremissingbutoverridden", true}
-                           });
+            SetupOverrides(new Override ("featureenabledbutoverridden", false),
+                               new Override ("featuredisabledbutoverridden", true),
+                               new Override("featuremissingbutoverridden", true)
+                           );
         }
 
-        private static void SetupOverrides(Dictionary<string, bool> dictionary)
+        private static void SetupOverrides(params Override[] overrides)
         {
-            var overrides = new Mock<IOverrideProvider>();
-            overrides.Setup(x => x.GetOverrides()).Returns(dictionary);
-            FeatureToggles.SetOverrideProvider(overrides.Object);
+            var overrideProvider = new Mock<IOverrideProvider>();
+            overrideProvider.Setup(x => x.GetOverrides()).Returns(overrides);
+            FeatureToggles.SetOverrideProvider(overrideProvider.Object);
         }
 
         [TestCase("featureenabled", true)]
@@ -86,7 +84,7 @@ namespace Aqueduct.Toggles.Tests
         [Test]
         public void GetAllFeatures_GivenFeatureEnabledConfigButOverriddenByTheUser_ReturnsDisabledFeature()
         {
-            SetupOverrides(new Dictionary<string, bool> { { "featureenabled", false } });
+            SetupOverrides(new Override( "featureenabled", false ));
 
             var enabled = FeatureToggles.IsEnabled("featureenabled");
             Assert.False(enabled);
