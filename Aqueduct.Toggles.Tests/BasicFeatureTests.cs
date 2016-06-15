@@ -42,7 +42,7 @@ namespace Aqueduct.Toggles.Tests
         [Test]
         public void GetsCssClassStringCorrectly()
         {
-            Assert.AreEqual("feat-featureenabled feat-featuredisabledbutoverridden feat-featurewithsublayouts feat-enabledforcurrentlanguage feat-featurewithlayoutbytemplateid feat-featurewithlayoutbyitemid feat-featurewithlayoutdefault feat-featurewithmultiplelayouts", FeatureToggles.GetCssClassesForFeatures("current"));
+            Assert.AreEqual("feat-featureenabled feat-featuredisabledbutoverridden feat-featurewithsublayouts no-feat-enabledbutwronglanguage feat-enabledforcurrentlanguage feat-featurewithlayoutbytemplateid feat-featurewithlayoutbyitemid feat-featurewithlayoutdefault feat-featurewithmultiplelayouts", FeatureToggles.GetCssClassesForFeatures("current"));
         }
 
         [Test]
