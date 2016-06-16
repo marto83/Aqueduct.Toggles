@@ -55,6 +55,8 @@
     <Compile Include="ProcessXmlBasedLayoutDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SitecoreFeatureToggles.cs" />
+    <Compile Include="SitecoreOverrideProvider.cs" />
+    <Compile Include="SitecoreOverrideSettings.cs" />
     <Compile Include="TogglePlaceholder.cs" />
   </ItemGroup>
   <ItemGroup>

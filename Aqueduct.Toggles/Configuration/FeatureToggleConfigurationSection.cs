@@ -16,6 +16,15 @@ namespace Aqueduct.Toggles.Configuration
         [ConfigurationProperty("encryption")]
         public EncryptionConfigurationElement EncryptionElement => (EncryptionConfigurationElement)this["encryption"];
 
+        [ConfigurationProperty("enableSitecoreOverrides", DefaultValue = false)]
+        public bool EnableSitecoreOverrides => (bool) base["enableSitecoreOverrides"];
+
+        [ConfigurationProperty("sitecoreOverridesPath")]
+        public string SitecoreOverridesPath => (string) base["sitecoreOverridesPath"];
+
+        [ConfigurationProperty("sitecoreOverridesTemplateName")]
+        public string SitecoreOverridesTemplateName => (string) base["sitecoreOverridesTemplateName"];
+
         public IEncryptionConfiguration Encryption => EncryptionElement;
     }
 }

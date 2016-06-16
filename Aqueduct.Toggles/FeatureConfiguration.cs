@@ -1,24 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using Aqueduct.Toggles.Configuration;
-using Aqueduct.Toggles.Overrides;
 
 namespace Aqueduct.Toggles
 {
-    internal class FeatureConfiguration
+    public class FeatureConfiguration
     {
         private IList<Feature> _features = new List<Feature>();
-        internal IOverrideProvider Provider;
 
-        internal void LoadFromConfiguration(FeatureToggleConfigurationSection config)
+        protected virtual FeatureConfiguration LoadFromConfiguration()
         {
-            _features = config.Features.Cast<FeatureToggleConfigurationElement>().Select(Feature.FromConfig).ToList();
-        }
-
-        internal void SetOverrideProvider(IOverrideProvider provider)
-        {
-            Provider = provider;
+            var config = ConfigurationManager.GetSection("featureToggles") as FeatureToggleConfigurationSection;
+            var configuration = new FeatureConfiguration();
+            configuration._features = config.Features.Cast<FeatureToggleConfigurationElement>().Select(Feature.FromConfig).ToList();
+            return configuration;
         }
         
         public IEnumerable<Feature> AllFeatures => _features;
@@ -27,13 +24,8 @@ namespace Aqueduct.Toggles
 
         public bool IsEnabled(string name)
         {
-            return IsEnabledByOverride(name) ??
+            return
             IsEnabled(GetFeature(name));
-        }
-
-        private bool? IsEnabledByOverride(string name)
-        {
-            return Provider.GetOverrides().FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase))?.Enabled;
         }
 
         public bool IsEnabled(Feature feature)
@@ -41,7 +33,7 @@ namespace Aqueduct.Toggles
             if (feature == null)
                 return false;
 
-            return IsEnabledByOverride(feature.Name) ?? feature.Enabled;
+            return feature.Enabled;
         }
 
         public Feature GetFeature(string name)
