@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.SessionState;
-using Aqueduct.Toggles.Configuration;
 using Aqueduct.Toggles.Overrides;
 
 namespace Aqueduct.Toggles
@@ -14,43 +9,7 @@ namespace Aqueduct.Toggles
         internal static List<IOverrideProvider> Providers = new List<IOverrideProvider>();
 
         public static readonly FeatureConfiguration Configuration = new FeatureConfiguration();
-        private static object _lock = new object();
-        private static List<Action<FeatureConfiguration>> _postConfigLoadedActions = new List<Action<FeatureConfiguration>>();
-
-        public static void PostConfigLoaded(Action<FeatureConfiguration> postConfigLoadedAction)
-        {
-            lock (_lock)
-            {
-                if (postConfigLoadedAction != null)
-                    _postConfigLoadedActions.Add(postConfigLoadedAction);
-            }
-        }
-
-        static FeatureToggles()
-        {
-            ExecutePostLoadedActions();
-        }
-
-        private static void ExecutePostLoadedActions()
-        {
-            lock (_lock)
-            {
-                foreach (var action in _postConfigLoadedActions)
-                {
-                    try
-                    {
-                        action.Invoke(Configuration);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine("Error executing post loaded action. " + ex.Message);
-                    }
-                }
-
-                _postConfigLoadedActions.Clear();
-            }
-        }
-
+        
         public static void SetOverrideProvider(IOverrideProvider provider)
         {
             Providers.Add(provider);
@@ -97,19 +56,18 @@ namespace Aqueduct.Toggles
             //return first matching provider that has the key
             foreach (var provider in Providers)
             {
-                var providerOverride = provider.GetOverrides();
-                if (providerOverride?.ContainsKey(name) ?? false)
+                var overrides = provider.GetOverrides();
+                if (overrides?.ContainsKey(name) ?? false)
                 {
                     var feature = Configuration.GetFeature(name);
                     if (feature != null)
                     {
-                        feature.FeatureOverride = provider.Name;
+                        feature.OverrideProviderName = provider.Name;
                     }
-                    return new Dictionary<string, bool> { { name, providerOverride[name] } };
+                    return new Dictionary<string, bool> { { name, overrides[name] } };
                 }
             }
             return null;
-
         }
     }
 }

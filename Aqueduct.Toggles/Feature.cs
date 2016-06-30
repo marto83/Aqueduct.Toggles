@@ -28,7 +28,7 @@ namespace Aqueduct.Toggles
             }
         }
 
-        public string FeatureOverride { get; set; }
+        public string OverrideProviderName { get; set; }
 
         private void UpdateLanguagesList(string value)
         {
