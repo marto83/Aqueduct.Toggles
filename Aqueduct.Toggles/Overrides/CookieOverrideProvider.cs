@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Web;
 using Aqueduct.Toggles.Helpers;
 
 namespace Aqueduct.Toggles.Overrides
 {
-    internal class CookieOverrideProvider : IOverrideProvider
+    public class CookieOverrideProvider : IOverrideProvider
     {
-        public string Name => "Cookie";
-
         private readonly HttpContextBase _context;
         internal const string CookieName = "Aqueduct.Toggles";
+
+        public string Name => "CookieProvider";
 
         public CookieOverrideProvider(HttpContextBase context)
         {
@@ -24,18 +21,20 @@ namespace Aqueduct.Toggles.Overrides
         {
         }
 
-        public IEnumerable<Override> GetOverrides()
+        public Dictionary<string, bool> GetOverrides()
         {
             var context = GetCurrentContext();
 
+            var dictionary = new Dictionary<string, bool>();
+
             if (context == null)
-                return Enumerable.Empty<Override>();
+                return dictionary;
 
             var request = context.Request;
 
             if (context.Items[CookieName] != null)
             {
-                return context.Items[CookieName] as IEnumerable<Override>;
+                return context.Items[CookieName] as Dictionary<string, bool>;
             }
 
             var cookie = request.Cookies[CookieName];
@@ -44,25 +43,17 @@ namespace Aqueduct.Toggles.Overrides
                 try
                 {
                     var decryptedValue = cookie.Value.Decrypt();
-                    var features = decryptedValue.Deserialize<List<Override>>();
-                    foreach (var feature in features)
-                    {
-                        feature.ProviderName = Name;
-                    }
+                    var features = decryptedValue.Deserialize<Dictionary<string, bool>>();
                     context.Items[CookieName] = features;
 
                     return features;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Debug.WriteLine("Error reading cookie value. " + ex.Message);
-
-                    //Expire the cookie
-                    cookie.Expires = DateTime.Now.AddYears(-1);
-                    context.Request.Cookies.Add(cookie);
+                    return dictionary;
                 }
             }
-            return Enumerable.Empty<Override>();
+            return dictionary;
         }
 
         private HttpContextBase GetCurrentContext()
@@ -73,11 +64,8 @@ namespace Aqueduct.Toggles.Overrides
             return context;
         }
 
-        public void SetOverrides(IEnumerable<Override> overrides)
+        public void SetOverrides(Dictionary<string, bool> overrides)
         {
-            Contract.Assert(overrides != null);
-            if (overrides.Any() == false) return;
-
             var context = GetCurrentContext();
 
             var cookie = new HttpCookie(CookieName, overrides.Serialize().Encrypt()) { HttpOnly = true };

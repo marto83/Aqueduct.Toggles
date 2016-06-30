@@ -11,9 +11,9 @@ namespace Aqueduct.Toggles
 {
     public static class FeatureToggles
     {
-        internal static List<IOverrideProvider> Providers { get; set; }
+        internal static List<IOverrideProvider> Providers = new List<IOverrideProvider>();
 
-        public static readonly FeatureConfiguration Configuration;
+        public static readonly FeatureConfiguration Configuration = new FeatureConfiguration();
         private static object _lock = new object();
         private static List<Action<FeatureConfiguration>> _postConfigLoadedActions = new List<Action<FeatureConfiguration>>();
 
@@ -21,18 +21,14 @@ namespace Aqueduct.Toggles
         {
             lock (_lock)
             {
-                if(postConfigLoadedAction != null)
+                if (postConfigLoadedAction != null)
                     _postConfigLoadedActions.Add(postConfigLoadedAction);
             }
         }
 
-        public static void Initialise(FeatureConfiguration config = null)
+        static FeatureToggles()
         {
-            var passedConfig = config ?? new FeatureConfiguration();
-
-            
             ExecutePostLoadedActions();
-            SetOverrideProvider(new CookieOverrideProvider());
         }
 
         private static void ExecutePostLoadedActions()
@@ -60,6 +56,11 @@ namespace Aqueduct.Toggles
             Providers.Add(provider);
         }
 
+        public static void ResetProviders()
+        {
+            Providers.Clear();
+        }
+
         public static IEnumerable<IOverrideProvider> GetOverrideProviders()
         {
             return Providers.ToList();
@@ -67,12 +68,7 @@ namespace Aqueduct.Toggles
 
         public static bool IsEnabled(string name)
         {
-            return IsEnabledByOverride(name) ?? Configuration.IsEnabled(name);
-        }
-
-        private static bool? IsEnabledByOverride(string name)
-        {
-            return Providers.SelectMany(x => x.GetOverrides()).FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase))?.Enabled;
+            return GetFeatureFlagFromOverrideProviders(name)?[name] ?? Configuration.IsEnabled(name);
         }
 
         public static string GetCssClassesForFeatures(string currentLanguage)
@@ -94,6 +90,26 @@ namespace Aqueduct.Toggles
         public static IEnumerable<Feature> GetAllEnabledFeatures()
         {
             return GetAllFeatures().Where(x => IsEnabled(x.Name));
+        }
+
+        private static Dictionary<string, bool> GetFeatureFlagFromOverrideProviders(string name)
+        {
+            //return first matching provider that has the key
+            foreach (var provider in Providers)
+            {
+                var providerOverride = provider.GetOverrides();
+                if (providerOverride?.ContainsKey(name) ?? false)
+                {
+                    var feature = Configuration.GetFeature(name);
+                    if (feature != null)
+                    {
+                        feature.FeatureOverride = provider.Name;
+                    }
+                    return new Dictionary<string, bool> { { name, providerOverride[name] } };
+                }
+            }
+            return null;
+
         }
     }
 }

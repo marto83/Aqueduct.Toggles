@@ -3,21 +3,29 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using Aqueduct.Toggles.Configuration;
+using Aqueduct.Toggles.Overrides;
 
 namespace Aqueduct.Toggles
 {
     public class FeatureConfiguration
     {
+        internal static readonly FeatureToggleConfigurationSection FeatureToggleConfiguration = ConfigurationManager.GetSection("featureToggles") as FeatureToggleConfigurationSection;
+
         private IList<Feature> _features = new List<Feature>();
 
-        protected virtual FeatureConfiguration LoadFromConfiguration()
+        public FeatureConfiguration()
         {
-            var config = ConfigurationManager.GetSection("featureToggles") as FeatureToggleConfigurationSection;
-            var configuration = new FeatureConfiguration();
-            configuration._features = config.Features.Cast<FeatureToggleConfigurationElement>().Select(Feature.FromConfig).ToList();
-            return configuration;
+            if (FeatureToggleConfiguration == null) throw new ConfigurationErrorsException("Missing featureToggles section in config.");
+            LoadFromConfiguration();
         }
-        
+
+        protected void LoadFromConfiguration()
+        {
+            _features = FeatureToggleConfiguration.Features.Cast<FeatureToggleConfigurationElement>().Select(Feature.FromConfig).ToList();
+        }
+
+        public FeatureToggleConfigurationSection FeatureToggleConfigurationSection => FeatureToggleConfiguration;
+
         public IEnumerable<Feature> AllFeatures => _features;
 
         public IEnumerable<Feature> EnabledFeatures => _features.Where(IsEnabled);

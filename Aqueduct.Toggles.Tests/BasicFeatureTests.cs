@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using Aqueduct.Toggles.Overrides;
 using Moq;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Aqueduct.Toggles.Tests
@@ -13,17 +15,20 @@ namespace Aqueduct.Toggles.Tests
         [SetUp]
         public void Setup()
         {
-            SetupOverrides(new Override ("featureenabledbutoverridden", false),
-                               new Override ("featuredisabledbutoverridden", true),
-                               new Override("featuremissingbutoverridden", true)
-                           );
+            SetupOverrides(new Dictionary<string, bool>
+                           {
+                               {"featureenabledbutoverridden", false},
+                               {"featuredisabledbutoverridden", true},
+                               {"featuremissingbutoverridden", true}
+                           });
         }
 
-        private static void SetupOverrides(params Override[] overrides)
+        private static void SetupOverrides(Dictionary<string, bool> dictionary)
         {
-            var overrideProvider = new Mock<IOverrideProvider>();
-            overrideProvider.Setup(x => x.GetOverrides()).Returns(overrides);
-            FeatureToggles.SetOverrideProvider(overrideProvider.Object);
+            var overrides = new Mock<IOverrideProvider>();
+            overrides.Setup(x => x.Name).Returns("MockProvider");
+            overrides.Setup(x => x.GetOverrides()).Returns(dictionary);
+            FeatureToggles.SetOverrideProvider(overrides.Object);
         }
 
         [TestCase("featureenabled", true)]
@@ -34,13 +39,16 @@ namespace Aqueduct.Toggles.Tests
         [TestCase("featuremissingbutoverridden", true)]
         public void ReadsBasicFeaturesFromConfigCorrectly(string feature, bool expected)
         {
-            Assert.AreEqual(expected, FeatureToggles.IsEnabled(feature));
+                Assert.AreEqual(expected, FeatureToggles.IsEnabled(feature));
         }
 
         [Test]
         public void GetsCssClassStringCorrectly()
         {
-            Assert.AreEqual("feat-featureenabled feat-featuredisabledbutoverridden feat-featurewithsublayouts no-feat-enabledbutwronglanguage feat-enabledforcurrentlanguage feat-featurewithlayoutbytemplateid feat-featurewithlayoutbyitemid feat-featurewithlayoutdefault feat-featurewithmultiplelayouts", FeatureToggles.GetCssClassesForFeatures("current"));
+           Assert.AreEqual(
+                    "feat-featureenabled feat-featureenabledbutoverridden feat-featurewithsublayouts no-feat-enabledbutwronglanguage feat-enabledforcurrentlanguage feat-featurewithlayoutbytemplateid feat-featurewithlayoutbyitemid feat-featurewithlayoutdefault feat-featurewithmultiplelayouts",
+                    FeatureToggles.GetCssClassesForFeatures("current"));
+           
         }
 
         [Test]
@@ -84,16 +92,16 @@ namespace Aqueduct.Toggles.Tests
         [Test]
         public void GetAllFeatures_GivenFeatureEnabledConfigButOverriddenByTheUser_ReturnsDisabledFeature()
         {
-            SetupOverrides(new Override( "featureenabled", false ));
+            SetupOverrides(new Dictionary<string, bool> { { "featureenabledTest", false } });
 
-            var enabled = FeatureToggles.IsEnabled("featureenabled");
+            var enabled = FeatureToggles.IsEnabled("featureenabledTest");
             Assert.False(enabled);
         }
 
         [TearDown]
         public void TearDown()
         {
-            FeatureToggles.SetOverrideProvider(new CookieOverrideProvider());
+           
         }
     }
 }

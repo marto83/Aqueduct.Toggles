@@ -19,14 +19,14 @@ namespace Aqueduct.Toggles.Tests.Overrides
     {
         private CookieOverrideProvider _provider;
         private HttpContextBase _context;
-        private List<Override> _validOverrides;
+        private Dictionary<string, bool> _validOverrides;
 
         [SetUp]
         public void Setup()
         {
             _context = Substitute.For<HttpContextBase>();
             _provider = new CookieOverrideProvider(_context);
-            _validOverrides = new List<Override> {new Override("test", true)};
+            _validOverrides = new Dictionary<string, bool> { { "test", true } };
         }
 
         [Test]
@@ -98,19 +98,18 @@ namespace Aqueduct.Toggles.Tests.Overrides
             cookies.Should().HaveCount(1);
             var cookie = cookies[CookieOverrideProvider.CookieName];
             cookie.Should().NotBeNull();
-            var overrides = cookie.Value.Decrypt().Deserialize<List<Override>>();
+            var overrides = cookie.Value.Decrypt().Deserialize<Dictionary<string, bool>>();
             ValidateOverrides(overrides);
         }
 
 
-        private static void ValidateOverrides(IEnumerable<Override> overrides)
+        private static void ValidateOverrides(IDictionary<string, bool> overrides)
         {
-            var @override = overrides.FirstOrDefault(x => x.Name == "test");
-            @override.Should().NotBeNull();
-            @override.Enabled.Should().BeTrue();
+            overrides.Should().ContainKey("test");
+            overrides["test"].Should().BeTrue();
         }
 
-        private static void ValidateEmptyOverrides(IEnumerable<Override> overrides)
+        private static void ValidateEmptyOverrides(Dictionary<string, bool> overrides)
         {
             overrides.Should().NotBeNull();
             overrides.Should().BeEmpty();

@@ -3,7 +3,7 @@ using System.Configuration;
 
 namespace Aqueduct.Toggles.Configuration
 {
-    internal class FeatureToggleConfigurationSection : ConfigurationSection
+    public class FeatureToggleConfigurationSection : ConfigurationSection
     {
         public static Func<FeatureToggleConfigurationSection> Settings = () => settings;
 

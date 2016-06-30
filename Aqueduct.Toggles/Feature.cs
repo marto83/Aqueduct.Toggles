@@ -28,6 +28,8 @@ namespace Aqueduct.Toggles
             }
         }
 
+        public string FeatureOverride { get; set; }
+
         private void UpdateLanguagesList(string value)
         {
             var languages = !string.IsNullOrEmpty(value) ? value.Split(',') : Enumerable.Empty<string>();
