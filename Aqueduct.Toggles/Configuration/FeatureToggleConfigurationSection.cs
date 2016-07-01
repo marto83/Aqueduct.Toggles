@@ -22,8 +22,8 @@ namespace Aqueduct.Toggles.Configuration
         [ConfigurationProperty("sitecoreOverridesPath")]
         public string SitecoreOverridesPath => (string) base["sitecoreOverridesPath"];
 
-        [ConfigurationProperty("sitecoreOverridesTemplateName")]
-        public string SitecoreOverridesTemplateName => (string) base["sitecoreOverridesTemplateName"];
+        [ConfigurationProperty("sitecoreFeatureDatabaseDefault")]
+        public string SitecoreFeatureDatabaseDefault => (string) base["sitecoreFeatureDatabaseDefault"];
 
         public IEncryptionConfiguration Encryption => EncryptionElement;
     }

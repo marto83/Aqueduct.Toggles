@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Aqueduct.Toggles.Overrides;
 
 namespace Aqueduct.Toggles
@@ -9,7 +10,7 @@ namespace Aqueduct.Toggles
         internal static List<IOverrideProvider> Providers = new List<IOverrideProvider>();
 
         public static readonly FeatureConfiguration Configuration = new FeatureConfiguration();
-        
+
         public static void SetOverrideProvider(IOverrideProvider provider)
         {
             Providers.Add(provider);
@@ -43,7 +44,9 @@ namespace Aqueduct.Toggles
 
         public static IEnumerable<Feature> GetAllFeatures()
         {
-            return Configuration.AllFeatures.ToList();
+            var features = Configuration.AllFeatures.ToList();
+            features.ForEach(UpdateFeatureOverrideProviderName);
+            return features;
         }
 
         public static IEnumerable<Feature> GetAllEnabledFeatures()
@@ -68,6 +71,22 @@ namespace Aqueduct.Toggles
                 }
             }
             return null;
+        }
+
+        private static void UpdateFeatureOverrideProviderName(Feature feature)
+        {
+            //return first matching provider that has the key
+            foreach (var provider in Providers)
+            {
+                var overrides = provider.GetOverrides();
+                if (overrides?.ContainsKey(feature.Name) ?? false)
+                {
+                    feature.OverrideProviderName = provider.Name;
+                    feature.Enabled = overrides[feature.Name];
+                    return;
+                }
+                feature.OverrideProviderName = "";
+            }
         }
     }
 }

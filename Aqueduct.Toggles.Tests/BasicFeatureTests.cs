@@ -39,16 +39,15 @@ namespace Aqueduct.Toggles.Tests
         [TestCase("featuremissingbutoverridden", true)]
         public void ReadsBasicFeaturesFromConfigCorrectly(string feature, bool expected)
         {
-                Assert.AreEqual(expected, FeatureToggles.IsEnabled(feature));
+            Assert.AreEqual(expected, FeatureToggles.IsEnabled(feature));
         }
 
         [Test]
         public void GetsCssClassStringCorrectly()
         {
-           Assert.AreEqual(
-                    "feat-featureenabled feat-featureenabledbutoverridden feat-featurewithsublayouts no-feat-enabledbutwronglanguage feat-enabledforcurrentlanguage feat-featurewithlayoutbytemplateid feat-featurewithlayoutbyitemid feat-featurewithlayoutdefault feat-featurewithmultiplelayouts",
-                    FeatureToggles.GetCssClassesForFeatures("current"));
-           
+            var featuresForClass = FeatureToggles.GetCssClassesForFeatures("current");
+            Assert.IsTrue(featuresForClass.Contains("no-feat-enabledbutwronglanguage"));
+            Assert.IsTrue(featuresForClass.Contains("feat-enabledforcurrentlanguage"));
         }
 
         [Test]
@@ -101,7 +100,7 @@ namespace Aqueduct.Toggles.Tests
         [TearDown]
         public void TearDown()
         {
-           
+
         }
     }
 }
