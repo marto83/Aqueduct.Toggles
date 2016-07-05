@@ -25,7 +25,7 @@ namespace Aqueduct.Toggles.Sitecore.EventHandlers
                         rootItem.Paths.Path.Contains(
                             FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreOverridesPath))
                     {
-                        SitecoreOverrideProvider.RefreshSitecoreOverrides(remoteEventArgs.TargetDatabaseName);
+                        SitecoreOverrideProvider.Instance.RefreshSitecoreOverrides(remoteEventArgs.TargetDatabaseName);
                     }
                 }
             }
@@ -40,7 +40,7 @@ namespace Aqueduct.Toggles.Sitecore.EventHandlers
             if (item != null && item.Paths.Path.Contains(FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreOverridesPath)
                 && item.Database.Name.Equals("master"))
             {
-                SitecoreOverrideProvider.RefreshSitecoreOverrides(item.Database.Name);
+                SitecoreOverrideProvider.Instance.RefreshSitecoreOverrides(item.Database.Name);
             }
         }
 
@@ -55,7 +55,7 @@ namespace Aqueduct.Toggles.Sitecore.EventHandlers
 
             if (rootItem != null && sitecoreID == rootItem.ID)
             {
-                SitecoreOverrideProvider.RefreshSitecoreOverrides(item.Database.Name);
+                SitecoreOverrideProvider.Instance.RefreshSitecoreOverrides(item.Database.Name);
             }
         }
 

@@ -70,7 +70,7 @@ namespace Aqueduct.Toggles
                               Enabled = element.Enabled,
                               Languages = element.Languages,
                               Name = element.Name,
-                              DefaultEnabled = element.DefaultEnabled
+                              DefaultEnabled = element.Enabled
                           };
             if (element.Help != null)
             {

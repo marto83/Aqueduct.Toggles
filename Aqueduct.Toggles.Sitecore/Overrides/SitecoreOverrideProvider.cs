@@ -18,15 +18,35 @@ namespace Aqueduct.Toggles.Sitecore.Overrides
     {
         public string Name => "Sitecore";
 
+        private static SitecoreOverrideProvider _sitecoreOverrideProvider;
+
         private static readonly ReaderWriterLockSlim ReadWriteLock = new ReaderWriterLockSlim();
-        private static Dictionary<string, bool> _sitecoreOverrideDictionary;
+        private Dictionary<string, bool> _sitecoreOverrideDictionary;
 
-        static SitecoreOverrideProvider()
+        public static SitecoreOverrideProvider Instance
         {
-            RefreshSitecoreOverrides();
-        }
+            get
+            {
+                ReadWriteLock.EnterWriteLock();
+                try
+                {
+                    if (_sitecoreOverrideProvider == null)
+                    {
+                        _sitecoreOverrideProvider = new SitecoreOverrideProvider();
+                        _sitecoreOverrideProvider.RefreshSitecoreOverrides();
+                    }
 
-        public static void RefreshSitecoreOverrides(string databaseName = null)
+                    return _sitecoreOverrideProvider;
+                }
+                finally
+                {
+                    ReadWriteLock.ExitWriteLock();
+                }
+
+            }
+        }
+        
+        public void RefreshSitecoreOverrides(string databaseName = null)
         {
             ReadWriteLock.EnterWriteLock();
             try
@@ -59,8 +79,11 @@ namespace Aqueduct.Toggles.Sitecore.Overrides
                     {
                         foreach (Item child in featureCollection.Children)
                         {
-                            _sitecoreOverrideDictionary.Add(child.Fields["Name"].ToString(),
-                                child.Fields["Enabled"].ToString() == "1");
+                            if (!_sitecoreOverrideDictionary.ContainsKey(child.Fields["Name"].ToString()))
+                            {
+                                _sitecoreOverrideDictionary.Add(child.Fields["Name"].ToString(),
+                                    child.Fields["Enabled"].ToString() == "1");
+                            }
                         }
                     }
                 }
@@ -70,7 +93,6 @@ namespace Aqueduct.Toggles.Sitecore.Overrides
                 ReadWriteLock.ExitWriteLock();
             }
         }
-
 
         public Dictionary<string, bool> GetOverrides()
         {

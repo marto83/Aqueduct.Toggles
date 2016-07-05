@@ -45,7 +45,7 @@ namespace Aqueduct.Toggles
         public static IEnumerable<Feature> GetAllFeatures()
         {
             var features = Configuration.AllFeatures.ToList();
-            features.ForEach(UpdateFeatureOverrideProviderName);
+            features.ForEach(ApplyOverrides);
             return features;
         }
 
@@ -73,7 +73,7 @@ namespace Aqueduct.Toggles
             return null;
         }
 
-        private static void UpdateFeatureOverrideProviderName(Feature feature)
+        private static void ApplyOverrides(Feature feature)
         {
             feature.Enabled = feature.DefaultEnabled;
             feature.OverrideProviderName = "Config File";
