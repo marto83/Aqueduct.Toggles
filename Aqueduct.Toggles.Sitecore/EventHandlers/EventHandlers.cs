@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Aqueduct.Toggles.Sitecore.Overrides;
 using Sitecore.Data;
 using Sitecore.Data.Events;
 using Sitecore.Data.Items;
-using Sitecore.Diagnostics;
 using Sitecore.Events;
 
 namespace Aqueduct.Toggles.Sitecore.EventHandlers
@@ -49,5 +44,25 @@ namespace Aqueduct.Toggles.Sitecore.EventHandlers
             }
         }
 
+        //Master DB
+        public void OnItemDeletedHandler(object sender, EventArgs args)
+        {
+            var sitecoreID = Event.ExtractParameter(args, 1) as ID;
+            var item = Event.ExtractParameter(args, 0) as Item;
+
+            var rootItem = item?.Database.GetItem(
+                FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreOverridesPath);
+
+            if (rootItem != null && sitecoreID == rootItem.ID)
+            {
+                SitecoreOverrideProvider.RefreshSitecoreOverrides(item.Database.Name);
+            }
+        }
+
+        //Master DB
+        public void OnItemDeletedRemoteHandler(object sender, EventArgs args)
+        {
+           OnItemDeletedHandler(sender,args);
+        }
     }
 }

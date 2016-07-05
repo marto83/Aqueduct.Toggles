@@ -12,6 +12,7 @@ namespace Aqueduct.Toggles
     {
         public string Name { get; set; }
         public bool Enabled { get; set; }
+        public bool DefaultEnabled { get; set; }
         public string ShortDescription { get; set; }
         public string Requirements { get; set; }
         public string IssueTrackingReference { get; set; }
@@ -51,7 +52,7 @@ namespace Aqueduct.Toggles
         public IList<LayoutToggle> Items { get; private set; }
 
         public IList<RenderingToggle> Renderings { get; private set; }
-
+        
         public Feature()
         {
             Templates = new List<LayoutToggle>();
@@ -68,7 +69,8 @@ namespace Aqueduct.Toggles
                           {
                               Enabled = element.Enabled,
                               Languages = element.Languages,
-                              Name = element.Name
+                              Name = element.Name,
+                              DefaultEnabled = element.DefaultEnabled
                           };
             if (element.Help != null)
             {

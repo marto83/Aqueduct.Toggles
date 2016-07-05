@@ -75,6 +75,8 @@ namespace Aqueduct.Toggles
 
         private static void UpdateFeatureOverrideProviderName(Feature feature)
         {
+            feature.Enabled = feature.DefaultEnabled;
+            feature.OverrideProviderName = "Config File";
             //return first matching provider that has the key
             foreach (var provider in Providers)
             {
@@ -85,7 +87,6 @@ namespace Aqueduct.Toggles
                     feature.Enabled = overrides[feature.Name];
                     return;
                 }
-                feature.OverrideProviderName = "";
             }
         }
     }

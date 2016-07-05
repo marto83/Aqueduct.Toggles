@@ -12,6 +12,9 @@ namespace Aqueduct.Toggles.Configuration
         [ConfigurationProperty("enabled", IsRequired = true)]
         public bool Enabled => (bool)this["enabled"];
 
+        [ConfigurationProperty("enabled", IsRequired = true)]
+        public bool DefaultEnabled => (bool)this["enabled"];
+
         [ConfigurationProperty("help")]
         public FeatureToggleHelpConfigurationElement Help => (FeatureToggleHelpConfigurationElement)this["help"];
 
