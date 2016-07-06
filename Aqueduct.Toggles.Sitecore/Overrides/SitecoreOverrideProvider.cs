@@ -42,61 +42,52 @@ namespace Aqueduct.Toggles.Sitecore.Overrides
                 {
                     ReadWriteLock.ExitWriteLock();
                 }
-
             }
         }
-        
+
         public void RefreshSitecoreOverrides(string databaseName = null)
         {
-            ReadWriteLock.EnterWriteLock();
-            try
+            _sitecoreOverrideDictionary = new Dictionary<string, bool>();
+
+            if (HttpContext.Current != null)
             {
-                _sitecoreOverrideDictionary = new Dictionary<string, bool>();
+                SC.Data.Database database;
 
-                if (HttpContext.Current != null)
+                if (databaseName.IsNullOrEmpty())
                 {
-                    SC.Data.Database database;
-
-                    if (databaseName.IsNullOrEmpty())
-                    {
-                        if (SC.Context.Database != null && SC.Context.Database.Name != "core")
-                            database = SC.Context.Database;
-                        else
-                        {
-                            database = SC.Data.Database.GetDatabase(FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreFeatureDatabaseDefault);
-                        }
-                    }
+                    if (SC.Context.Database != null && SC.Context.Database.Name != "core")
+                        database = SC.Context.Database;
                     else
                     {
-                        database = SC.Data.Database.GetDatabase(databaseName);
+                        database = SC.Data.Database.GetDatabase(FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreFeatureDatabaseDefault);
                     }
+                }
+                else
+                {
+                    database = SC.Data.Database.GetDatabase(databaseName);
+                }
 
-                    var featureCollection =
-                        database?.GetItem(
-                            FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreOverridesPath);
+                var featureCollection =
+                    database?.GetItem(
+                        FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreOverridesPath);
 
-                    if (featureCollection != null)
+                if (featureCollection != null)
+                {
+                    foreach (Item child in featureCollection.Children)
                     {
-                        foreach (Item child in featureCollection.Children)
+                        if (!_sitecoreOverrideDictionary.ContainsKey(child.Fields["Name"].ToString()))
                         {
-                            if (!_sitecoreOverrideDictionary.ContainsKey(child.Fields["Name"].ToString()))
-                            {
-                                _sitecoreOverrideDictionary.Add(child.Fields["Name"].ToString(),
-                                    child.Fields["Enabled"].ToString() == "1");
-                            }
+                            _sitecoreOverrideDictionary.Add(child.Fields["Name"].ToString(),
+                                child.Fields["Enabled"].ToString() == "1");
                         }
                     }
                 }
-            }
-            finally
-            {
-                ReadWriteLock.ExitWriteLock();
             }
         }
 
         public Dictionary<string, bool> GetOverrides()
         {
-            return _sitecoreOverrideDictionary;
+            return Instance._sitecoreOverrideDictionary;
         }
 
         public void SetOverrides(Dictionary<string, bool> overrides)
