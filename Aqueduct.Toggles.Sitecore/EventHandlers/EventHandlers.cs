@@ -29,7 +29,6 @@ namespace Aqueduct.Toggles.Sitecore.EventHandlers
                     }
                 }
             }
-
         }
 
         //Master DB
@@ -62,7 +61,15 @@ namespace Aqueduct.Toggles.Sitecore.EventHandlers
         //Master DB
         public void OnItemDeletedRemoteHandler(object sender, EventArgs args)
         {
-           OnItemDeletedHandler(sender,args);
+            ItemDeletedRemoteEventArgs deleteEvent = (ItemDeletedRemoteEventArgs)args;
+
+            var rootItem = deleteEvent.Item?.Database.GetItem(
+                FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreOverridesPath);
+
+            if (rootItem != null && deleteEvent.ParentId == rootItem.ID)
+            {
+                SitecoreOverrideProvider.Instance.RefreshSitecoreOverrides(deleteEvent.Item.Database.Name);
+            }
         }
     }
 }

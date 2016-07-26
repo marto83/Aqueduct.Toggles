@@ -49,39 +49,47 @@ namespace Aqueduct.Toggles.Sitecore.Overrides
         {
             _sitecoreOverrideDictionary = new Dictionary<string, bool>();
 
-            if (HttpContext.Current != null)
+            try
             {
-                SC.Data.Database database;
-
-                if (databaseName.IsNullOrEmpty())
+                if (HttpContext.Current != null || !databaseName.IsNullOrEmpty())
                 {
-                    if (SC.Context.Database != null && SC.Context.Database.Name != "core")
-                        database = SC.Context.Database;
+                    SC.Data.Database database;
+
+                    if (databaseName.IsNullOrEmpty())
+                    {
+                        if (SC.Context.Database != null && SC.Context.Database.Name != "core")
+                            database = SC.Context.Database;
+                        else
+                        {
+                            database = SC.Data.Database.GetDatabase(FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreFeatureDatabaseDefault);
+                        }
+                    }
                     else
                     {
-                        database = SC.Data.Database.GetDatabase(FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreFeatureDatabaseDefault);
+                        database = SC.Data.Database.GetDatabase(databaseName);
                     }
-                }
-                else
-                {
-                    database = SC.Data.Database.GetDatabase(databaseName);
-                }
 
-                var featureCollection =
-                    database?.GetItem(
-                        FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreOverridesPath);
+                    var featureCollection =
+                        database?.GetItem(
+                            FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreOverridesPath);
 
-                if (featureCollection != null)
-                {
-                    foreach (Item child in featureCollection.Children)
+                    if (featureCollection != null)
                     {
-                        if (!_sitecoreOverrideDictionary.ContainsKey(child.Fields["Name"].ToString()))
+                        foreach (Item child in featureCollection.Children)
                         {
-                            _sitecoreOverrideDictionary.Add(child.Fields["Name"].ToString(),
-                                child.Fields["Enabled"].ToString() == "1");
+                            if (!_sitecoreOverrideDictionary.ContainsKey(child.Fields["Name"].ToString()))
+                            {
+                                _sitecoreOverrideDictionary.Add(child.Fields["Name"].ToString(),
+                                    child.Fields["Enabled"].ToString() == "1");
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                //handler execption..
+                //Write to default sitecore logger.
             }
         }
 
