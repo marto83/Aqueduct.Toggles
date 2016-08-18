@@ -19,13 +19,18 @@ namespace Aqueduct.Toggles.Sitecore.EventHandlers
                 if (database != null)
                 {
                     var rootItem = database.GetItem(new ID(remoteEventArgs.RootItemId));
-                    if ((remoteEventArgs.Deep &&
-                        FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreOverridesPath.Contains(
-                            rootItem.Paths.Path)) ||
-                        rootItem.Paths.Path.Contains(
-                            FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreOverridesPath))
+                    if (rootItem != null)
                     {
-                        SitecoreOverrideProvider.Instance.RefreshSitecoreOverrides(remoteEventArgs.TargetDatabaseName);
+                        if ((remoteEventArgs.Deep &&
+                             FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreOverridesPath
+                                 .Contains(
+                                     rootItem.Paths.Path)) ||
+                            rootItem.Paths.Path.Contains(
+                                FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreOverridesPath))
+                        {
+                            SitecoreOverrideProvider.Instance.RefreshSitecoreOverrides(
+                                remoteEventArgs.TargetDatabaseName);
+                        }
                     }
                 }
             }
