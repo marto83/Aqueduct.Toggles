@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Aqueduct.Toggles.Sitecore.Overrides;
 using Sitecore.Data;
 using Sitecore.Data.Events;
@@ -15,7 +16,26 @@ namespace Aqueduct.Toggles.Sitecore.EventHandlers
             var remoteEventArgs = args as PublishEndRemoteEventArgs;
             if (remoteEventArgs != null)
             {
-                var database = Database.GetDatabase(remoteEventArgs.TargetDatabaseName);
+                Database database = null;
+                try
+                {
+                    database = Database.GetDatabase(remoteEventArgs.TargetDatabaseName);
+                }
+                catch (Exception ex)
+                {
+                }
+                //Hardcoded to Web
+                if (database == null)
+                {
+                    try
+                    {
+                        database = Database.GetDatabase("web");
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+
                 if (database != null)
                 {
                     var rootItem = database.GetItem(new ID(remoteEventArgs.RootItemId));
@@ -29,7 +49,7 @@ namespace Aqueduct.Toggles.Sitecore.EventHandlers
                                 FeatureToggles.Configuration.FeatureToggleConfigurationSection.SitecoreOverridesPath))
                         {
                             SitecoreOverrideProvider.Instance.RefreshSitecoreOverrides(
-                                remoteEventArgs.TargetDatabaseName);
+                                database.Name);
                         }
                     }
                 }
