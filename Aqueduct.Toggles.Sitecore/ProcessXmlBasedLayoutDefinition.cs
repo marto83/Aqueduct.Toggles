@@ -62,7 +62,7 @@ namespace Aqueduct.Toggles.Sitecore
             for (var i = 0; i < renderings.Count; i++)
             {
                 var rendering = renderings[i];
-                if (rendering.RenderingItem.ID.Guid == replacement.Original)
+                if (rendering?.RenderingItem?.ID?.Guid == replacement?.Original)
                 {
                     var newRendering = renderingBuilder.GetRenederingById(replacement.New);
                     newRendering.Placeholder = rendering.Placeholder;
